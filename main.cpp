@@ -14,7 +14,7 @@ int main(){
     };
     Add myStruct;
 
-    printf("Scanning Numbers\n\n");
+    // printf("Scanning Numbers\n\n");
     scanf("%d %d %d", &I1, &I2, &B);   //Scanning for input 
     
     /*Error Checking*/
