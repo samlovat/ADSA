@@ -127,6 +127,9 @@ int main(){
             ans.push_front(digit);
         }
     }
+    if(Carry == 1){
+        ans.push_front(1);
+    }
     for(int i = 0; i < ans.size(); i++){
         cout << ans[i];
     };
