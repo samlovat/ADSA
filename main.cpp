@@ -20,7 +20,7 @@ int main(){
     cin >> I1;
     cin >> I2;
     cin >> B;
-    cout << "I1: " << I1 << "\n\nI2: " << I2 << "\n\nB: " << B << endl;
+    // cout << "I1: " << I1 << "\n\nI2: " << I2 << "\n\nB: " << B << endl;
 
     /*Error Checking*/
 
