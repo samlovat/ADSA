@@ -84,6 +84,10 @@ string add(string I1, string I2, int B){
     return answer;
 }
 
+string subt(string I1, string I2, int B){
+    
+}
+
 string karatsuba(string I1, string I2, int B){
     string answer;
     //Find Length of numbers
@@ -126,22 +130,25 @@ string karatsuba(string I1, string I2, int B){
     // cout << "\n\nx0: " << x0 << "\nx1: " << x1 << "\ny0: " << y0 << "\ny1: " << y1 << endl;
     
     //Make z2, z1 and z0
-    string z2, z1, z0;
+    string P0, P1, P2;
 
     //Recursive call to z's
-    z2 = karatsuba(x1, y1, B);
-    z1 = karatsuba(x1, y0, B);
-    z0 = karatsuba(x0, y0, B);
+    P0 = karatsuba(x0, y0, B);
+    P1 = karatsuba(x1, y1, B);
+    P2 = karatsuba((add(x0, x1, B)), add(y0, y1, B), B);
+
+    //Subtract to find P2 - P1 - P0
+    string sub = subt(subt(P2, P1, B), P0, B);
 
     //Append zeros for return
     for(int i = 0; i < n; i++){
-        z2 += '0';
+        P1 += '0';
     }
     for(int i = 0; i < half; i++){
-        z1 += '0';
+        sub += '0';
     }
 
-    answer = add(add(z2, z1, B), z0, B);
+    answer = add(add(P1, sub, B), P0, B);
     //return
     return answer;
 }
