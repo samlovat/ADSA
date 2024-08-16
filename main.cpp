@@ -123,7 +123,7 @@ string karatsuba(string I1, string I2, int B){
         }
     }
 
-    cout << "\n\nx0: " << x0 << "\nx1: " << x1 << "\ny0: " << y0 << "\ny1: " << y1 << endl;
+    // cout << "\n\nx0: " << x0 << "\nx1: " << x1 << "\ny0: " << y0 << "\ny1: " << y1 << endl;
     
     //Make z2, z1 and z0
     string z2, z1, z0;
@@ -226,8 +226,8 @@ int main(){
     */
     string ansadd = add(I1, I2, B);
     string ansmult = karatsuba(I1, I2, B);
-    cout << "\n\nAnsadd: " << ansadd << endl;
-    cout << "\n\nAnsmult: " << ansmult << endl;
+    cout << ansadd << endl;
+    cout << ansmult << endl;
     
     return 0;
 }
