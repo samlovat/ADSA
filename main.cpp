@@ -226,8 +226,6 @@ int main(){
     */
     string ansadd = add(I1, I2, B);
     string ansmult = karatsuba(I1, I2, B);
-    cout << ansadd << endl;
-    cout << ansmult << endl;
-    
+    cout << ansadd << " " << ansmult << endl;    
     return 0;
 }
