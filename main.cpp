@@ -85,7 +85,69 @@ string add(string I1, string I2, int B){
 }
 
 string subt(string I1, string I2, int B){
-    
+
+    string larger, smaller, answer;
+    int digit, digit1, digit2;
+
+    //To check if they are the same number, i.e. larger and smaller wouldn't be assigned during the following for loop
+    int sameNumber = 1;
+    //Determine which number is larger 
+    //If both are the same length, compare digits from most significant to least significant
+    //Both should be the same length since zeros have been appended as necessary for karatsuba before the subt function call
+    if(I1.length() != I2.length()){
+        int lengthDif;
+        if(I1.length() < I2.length()){
+            lengthDif = I2.length() - I1.length();
+            for(int i = 0; i < lengthDif; i++){
+                I1 = '0' + I1;
+            }
+        }else{
+            lengthDif = I1.length() - I2.length();
+            for(int i = 0; i < lengthDif; i++){
+                I2 = '0' + I2;
+            }
+        }
+    }
+    for(int i = 0; i < I1.length(); i++){
+        if((I1[i] - '0') < (I2[i] - '0')){
+            larger = I2;
+            smaller = I1;
+            sameNumber = 0;
+            break;
+        }else if((I2[i] - '0') < (I1[i] - '0')){
+            larger = I1;
+            smaller = I2;
+            sameNumber = 0;
+            break;
+        }
+    }
+
+    if(sameNumber == 1){
+        answer = '0';
+        return answer;
+    }
+
+
+    //Subtraction
+    int steal = 0;
+    for(int i = 0; i < smaller.length(); i++){
+        if(steal != 1){
+            digit1 = larger[larger.length()-1-i] - '0'; 
+            digit2 = smaller[smaller.length()-1-i] - '0';
+            digit = digit1 - digit2;
+        }else{
+            digit1 = larger[larger.length()-1-i] - '0';
+            digit2 = smaller[smaller.length()-1-i] - '0';
+            digit = digit1 - digit2 - 1;
+            steal = 0;
+        }
+        if(digit < 0){
+            digit += B;
+            steal = 1;
+        }
+        answer = to_string(digit) + answer;
+    }
+    return answer;    
 }
 
 string karatsuba(string I1, string I2, int B){
@@ -231,8 +293,27 @@ int main(){
         length1++;
     }
     */
+
+
     string ansadd = add(I1, I2, B);
     string ansmult = karatsuba(I1, I2, B);
-    cout << ansadd << " " << ansmult << " 0" << endl;    
+
+    //Cleans ansmult of leading zeros
+    int leadingZero;
+    for(int i = 0; i < ansmult.length(); i++){
+        if(ansmult[i] == '0'){
+            leadingZero = 1;
+        }else{
+            if(leadingZero != 1){
+                break;
+            }
+            ansmult = ansmult.substr(i, ansmult.length()-i);
+            break;
+        }
+    }
+    std::cout << ansadd << " " << ansmult << " 0" << endl;   
+
+    // string test = mult("8", "71827387", 9); 
+    // std::cout << "\n\nTEST RESULTS: " << test << endl;
     return 0;
 }
