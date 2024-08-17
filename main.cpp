@@ -152,8 +152,11 @@ string subt(string I1, string I2, int B){
 
 string karatsuba(string I1, string I2, int B){
     string answer;
+    static int counter = 0;
+    counter++;
     //Find Length of numbers
-    int n = max(I1.length(), I2.length());
+    float n = max(I1.length(), I2.length());
+    std::cout << "Karatsuba Call Num: " << counter << "\nFor the I1 and I2 of " << I1 << " and " << I2 << ". The n value is " << n << endl;
 
     //Base Case for n = 1
     if(I1.length() == 1 || I2.length() == 1){
@@ -178,9 +181,8 @@ string karatsuba(string I1, string I2, int B){
     //split numbers into parts 
     string x1, x0, y1, y0;
     int half = ceil(n/2);
-
     for(int i = 0; i < n; i++){
-        if(i < half){
+        if(i < floor(n/2)){
             x1 += I1[i];
             y1 += I2[i];
         }else{
@@ -189,7 +191,7 @@ string karatsuba(string I1, string I2, int B){
         }
     }
 
-    // cout << "\n\nx0: " << x0 << "\nx1: " << x1 << "\ny0: " << y0 << "\ny1: " << y1 << endl;
+    cout << "x0: " << x0 << " x1: " << x1 << " y0: " << y0 << " y1: " << y1 << endl;
     
     //Make z2, z1 and z0
     string P0, P1, P2;
@@ -198,12 +200,13 @@ string karatsuba(string I1, string I2, int B){
     P0 = karatsuba(x0, y0, B);
     P1 = karatsuba(x1, y1, B);
     P2 = karatsuba((add(x0, x1, B)), add(y0, y1, B), B);
-
+    std::cout << "Karatsuba Num: " << counter << ". \nP0: " << P0 << " P1: " << P1 << "P2: " << P2 << endl;
     //Subtract to find P2 - P1 - P0
     string sub = subt(subt(P2, P1, B), P0, B);
+    std::cout << "Sub Val: " << sub << endl;
 
     //Append zeros for return
-    for(int i = 0; i < n; i++){
+    for(int i = 0; i < (half*2); i++){
         P1 += '0';
     }
     for(int i = 0; i < half; i++){
@@ -211,6 +214,7 @@ string karatsuba(string I1, string I2, int B){
     }
 
     answer = add(add(P1, sub, B), P0, B);
+    std::cout << "Final Calculation: P1*10^n: " << P1 << " ()*10^n/2: " << sub << " P0: " << P0 << endl;
     //return
     return answer;
 }
