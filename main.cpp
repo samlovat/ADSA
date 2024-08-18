@@ -90,23 +90,23 @@ string subt(string I1, string I2, int B){
     int digit, digit1, digit2;                  //subtracted from the other. Digit variables to calculate each digit of answer 
     int sameNumber = 1;                         //To check if they are the same number, i.e. larger and smaller wouldn't be assigned during the following for loop
 
-    // if(I1.length() != I2.length()){             //If I1 and I2 aren't the same length, prepend zeros as necessary to the shorter number 
-    //     int lengthDif;
-    //     if(I1.length() < I2.length()){
-    //         lengthDif = I2.length() - I1.length();
-    //         for(int i = 0; i < lengthDif; i++){
-    //             I1 = '0' + I1;
-    //         }
-    //     }else{
-    //         lengthDif = I1.length() - I2.length();
-    //         for(int i = 0; i < lengthDif; i++){
-    //             I2 = '0' + I2;
-    //         }
-    //     }
-    // }
-    for(size_t i = 0; i < I1.length(); i++){
-        if((I1[i] - '0') < (I2[i] - '0')){
-            larger = I2;
+    if(I1.length() != I2.length()){             //If I1 and I2 aren't the same length, prepend zeros as necessary to the shorter number 
+        int lengthDif;
+        if(I1.length() < I2.length()){
+            lengthDif = I2.length() - I1.length();
+            for(int i = 0; i < lengthDif; i++){
+                I1 = '0' + I1;
+            }
+        }else{
+            lengthDif = I1.length() - I2.length();
+            for(int i = 0; i < lengthDif; i++){
+                I2 = '0' + I2;
+            }
+        }
+    }
+    for(size_t i = 0; i < I1.length(); i++){                    //If numbers are same length, iterate through to check which 
+        if((I1[i] - '0') < (I2[i] - '0')){                      //number is larger and smaller respectively, checks through 
+            larger = I2;                                        //leading zeros as well.
             smaller = I1;
             sameNumber = 0;
             break;
@@ -118,7 +118,7 @@ string subt(string I1, string I2, int B){
         }
     }
 
-    if(sameNumber == 1){
+    if(sameNumber == 1){                        //If sameNumber variable wasn't updated, the numbers must be the same and '0' is outputted
         answer = '0';
         return answer;
     }
