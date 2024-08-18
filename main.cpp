@@ -104,9 +104,9 @@ string subt(string I1, string I2, int B){
             }
         }
     }
-    for(size_t i = 0; i < I1.length(); i++){                    //If numbers are same length, iterate through to check which 
-        if((I1[i] - '0') < (I2[i] - '0')){                      //number is larger and smaller respectively, checks through 
-            larger = I2;                                        //leading zeros as well.
+    for(size_t i = 0; i < I1.length(); i++){                    //Now that numbers are same length, iterate through to check which 
+        if((I1[i] - '0') < (I2[i] - '0')){                      //number is larger and smaller respectively 
+            larger = I2;                                        
             smaller = I1;
             sameNumber = 0;
             break;
@@ -123,9 +123,8 @@ string subt(string I1, string I2, int B){
         return answer;
     }
 
-    //Subtraction
-    int steal = 0;
-    for(size_t i = 0; i < smaller.length(); i++){
+    int steal = 0;                                              //Steal variable, equivalent to carry for addition and multiplication
+    for(size_t i = 0; i < smaller.length(); i++){               
         if(steal != 1){
             digit1 = larger[larger.length()-1-i] - '0'; 
             digit2 = smaller[smaller.length()-1-i] - '0';
@@ -203,20 +202,6 @@ string karatsuba(string I1, string I2, int B){
     }
 
     answer = add(add(P1, sub, B), P0, B);
-
-    //Cleans answer of leading zeros
-    int leadingZero;
-    for(size_t i = 0; i < answer.length(); i++){
-        if(answer[i] == '0'){
-            leadingZero = 1;
-        }else{
-            if(leadingZero != 1){
-                break;
-            }
-            answer = answer.substr(i, answer.length()-i);
-            break;
-        }
-    }
     return answer;
 }
 
@@ -235,7 +220,20 @@ int main(){
 
     string ansadd = add(I1, I2, B);                             //Function Calls
     string ansmult = karatsuba(I1, I2, B);
-
+    
+    //Cleans answer of leading zeros
+    int leadingZero;
+    for(size_t i = 0; i < ansmult.length(); i++){
+        if(ansmult[i] == '0'){
+            leadingZero = 1;
+        }else{
+            if(leadingZero != 1){
+                break;
+            }
+            ansmult = ansmult.substr(i, ansmult.length()-i);
+            break;
+        }
+    }
     std::cout << ansadd << " " << ansmult << " 0" << endl;      //Output as Required 
     return 0;
 }
