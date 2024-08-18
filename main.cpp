@@ -7,20 +7,19 @@ string mult(string I1, string I2, int B){
     int digit;                                      //Digit var to hold and calculate each digit of answer 
     int carry = 0;                                  //Tracks if carry over occurs 
     string answer;    
-    if(I1.length() >= I2.length()){
+    if(I1.length() >= I2.length()){                 
         for(size_t i = 0; i < I1.length(); i++){
-            digit = (I1[I1.length()-1-i] - '0')*(I2[0] - '0') + carry;
-            if(digit >= B){
-                carry = floor(digit/B);
-                digit = digit%B;
+            digit = (I1[I1.length()-1-i] - '0')*(I2[0] - '0') + carry;  //If I1 >= I2, then I2 must be one digit long because of calling condition in karatsuba
+            if(digit >= B){                         //If digit is larger than Base B there has been carry over                    
+                carry = floor(digit/B);             //Carry value determined to be added to next digit
+                digit = digit%B;                    //New digit value assigned
             }else{
-                carry = 0;
+                carry = 0;                          //No carry necessary, therefore reset state of carry variable
             }
-            //Prepend next digit to front of answer
-            answer = to_string(digit) + answer;
+            answer = to_string(digit) + answer;      //Prepend next digit to front of answer
         }
         answer = to_string(carry) + answer;
-    }else{
+    }else{                                          //Same steps if I1 is the single digit number
         for(size_t i = 0; i < I2.length(); i++){
             digit = (I2[I2.length()-1-i] - '0')*(I1[0] - '0') + carry;
             if(digit >= B){
@@ -29,7 +28,6 @@ string mult(string I1, string I2, int B){
             }else{
                 carry = 0;
             }
-            //Prepend next digit to front of answer
             answer = to_string(digit) + answer;
         }
         answer = to_string(carry) + answer;
