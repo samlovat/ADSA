@@ -207,6 +207,20 @@ string karatsuba(string I1, string I2, int B){
     }
 
     answer = add(add(P1, sub, B), P0, B);
+
+    //Cleans answer of leading zeros
+    int leadingZero;
+    for(size_t i = 0; i < answer.length(); i++){
+        if(answer[i] == '0'){
+            leadingZero = 1;
+        }else{
+            if(leadingZero != 1){
+                break;
+            }
+            answer = answer.substr(i, answer.length()-i);
+            break;
+        }
+    }
     return answer;
 }
 
@@ -214,35 +228,18 @@ int main(){
     string I1;                      //Initialise Values
     string I2;
     int B;
-    
-    //Scanning for values
-    cin >> I1;
+    cin >> I1;                      //Scanning for values
     cin >> I2;
     cin >> B;
 
-    /*Error Checking*/
-
     if(B <= 1 || B > 10){
-        perror("BASE ERROR");
+        perror("BASE ERROR");       //Error Checking
         return 1;
     }
 
     string ansadd = add(I1, I2, B);
     string ansmult = karatsuba(I1, I2, B);
 
-    //Cleans ansmult of leading zeros
-    int leadingZero;
-    for(size_t i = 0; i < ansmult.length(); i++){
-        if(ansmult[i] == '0'){
-            leadingZero = 1;
-        }else{
-            if(leadingZero != 1){
-                break;
-            }
-            ansmult = ansmult.substr(i, ansmult.length()-i);
-            break;
-        }
-    }
     std::cout << ansadd << " " << ansmult << " 0" << endl;   
     return 0;
 }
