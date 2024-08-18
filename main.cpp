@@ -40,28 +40,29 @@ string mult(string I1, string I2, int B){
 }
 
 string add(string I1, string I2, int B){
-    string answer;
-    int length1 = I1.length();
+    string answer;                              //Initialise answer
+    int length1 = I1.length();                  //Store lengths of numbers
     int length2 = I2.length();
-    int digit;
-    int Carry = 0;
-    if(I1.length() >= I2.length()){
-        for(size_t i = 0; i < I1.length(); i++){
-            if(i >= I2.length()){
-                digit = Carry + I1[length1-1-i] - '0';
+    int digit;                                  //Variable to store each digit calculation
+    int Carry = 0;                              //Variable that tracks carry over 
+    
+    if(I1.length() >= I2.length()){                                             //If the length of I1 is larger than or equal to I2 
+        for(size_t i = 0; i < I1.length(); i++){                                //loop iterates n times where n is the num of digits in I1
+            if(i >= I2.length()){                           //If all of I2 has been handled stop trying to access I2 (avoid seg faults)
+                digit = Carry + I1[length1-1-i] - '0';      // - '0' to convert to integer form 
             }else{
-                digit = I1[length1-1-i] + I2[length2-1-i] + Carry - '0' - '0';
-            }
+                digit = I1[length1-1-i] + I2[length2-1-i] + Carry - '0' - '0';      //Addition of corresponding digits in I1, I2 and any Carry
+            }                                                                       // - '0' to convert to integer form 
             if(digit < B){
-                Carry = 0;
-            }else{
-                Carry = 1;
-                digit = digit - B;
+                Carry = 0;                      //If new digit is smaller than Base B, no carry over
+            }else{                      
+                Carry = 1;                      //Otherwise, there is carry over, change state of Carry for next loop iteration
+                digit = digit - B;              //Alter digit value to account for the carry over
             }
-            answer = to_string(digit) + answer;
+            answer = to_string(digit) + answer; //Prepend new digit to the answer (must convert to string first)
         }
     }else{
-        for(size_t i = 0; i < I2.length(); i++){
+        for(size_t i = 0; i < I2.length(); i++){                //Same Operations if I2 is larger than I1
             if(i >= I1.length()){
                 digit = Carry + I2[length2-1-i] - '0';
             }else{
@@ -77,37 +78,32 @@ string add(string I1, string I2, int B){
         }
     }
 
-    //Catch any remaining carry
-    if(Carry == 1){
-        answer = '1' + answer;
+    if(Carry == 1){                                 
+        answer = '1' + answer;                 //Catch any remaining carry
     }
     return answer;
 }
 
 string subt(string I1, string I2, int B){
 
-    string larger, smaller, answer;
-    int digit, digit1, digit2;
+    string larger, smaller, answer;             //Variable Initialisation, larger and smaller to determine which number should be 
+    int digit, digit1, digit2;                  //subtracted from the other. Digit variables to calculate each digit of answer 
+    int sameNumber = 1;                         //To check if they are the same number, i.e. larger and smaller wouldn't be assigned during the following for loop
 
-    //To check if they are the same number, i.e. larger and smaller wouldn't be assigned during the following for loop
-    int sameNumber = 1;
-    //Determine which number is larger 
-    //If both are the same length, compare digits from most significant to least significant
-    //Both should be the same length since zeros have been appended as necessary for karatsuba before the subt function call
-    if(I1.length() != I2.length()){
-        int lengthDif;
-        if(I1.length() < I2.length()){
-            lengthDif = I2.length() - I1.length();
-            for(int i = 0; i < lengthDif; i++){
-                I1 = '0' + I1;
-            }
-        }else{
-            lengthDif = I1.length() - I2.length();
-            for(int i = 0; i < lengthDif; i++){
-                I2 = '0' + I2;
-            }
-        }
-    }
+    // if(I1.length() != I2.length()){             //If I1 and I2 aren't the same length, prepend zeros as necessary to the shorter number 
+    //     int lengthDif;
+    //     if(I1.length() < I2.length()){
+    //         lengthDif = I2.length() - I1.length();
+    //         for(int i = 0; i < lengthDif; i++){
+    //             I1 = '0' + I1;
+    //         }
+    //     }else{
+    //         lengthDif = I1.length() - I2.length();
+    //         for(int i = 0; i < lengthDif; i++){
+    //             I2 = '0' + I2;
+    //         }
+    //     }
+    // }
     for(size_t i = 0; i < I1.length(); i++){
         if((I1[i] - '0') < (I2[i] - '0')){
             larger = I2;
@@ -237,9 +233,9 @@ int main(){
         return 1;
     }
 
-    string ansadd = add(I1, I2, B);
+    string ansadd = add(I1, I2, B);                             //Function Calls
     string ansmult = karatsuba(I1, I2, B);
 
-    std::cout << ansadd << " " << ansmult << " 0" << endl;   
+    std::cout << ansadd << " " << ansmult << " 0" << endl;      //Output as Required 
     return 0;
 }
