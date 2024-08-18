@@ -4,11 +4,10 @@ using namespace std;
 #include <cmath>
 
 string mult(string I1, string I2, int B){
-    int digit;
-    int carry = 0;
-    string answer = "Multiplication didnt work";
+    int digit;                                      //Digit var to hold and calculate each digit of answer 
+    int carry = 0;                                  //Tracks if carry over occurs 
+    string answer;    
     if(I1.length() >= I2.length()){
-        answer = "";
         for(size_t i = 0; i < I1.length(); i++){
             digit = (I1[I1.length()-1-i] - '0')*(I2[0] - '0') + carry;
             if(digit >= B){
@@ -22,7 +21,6 @@ string mult(string I1, string I2, int B){
         }
         answer = to_string(carry) + answer;
     }else{
-        answer = "";
         for(size_t i = 0; i < I2.length(); i++){
             digit = (I2[I2.length()-1-i] - '0')*(I1[0] - '0') + carry;
             if(digit >= B){
@@ -125,39 +123,35 @@ string subt(string I1, string I2, int B){
 
     int steal = 0;                                              //Steal variable, equivalent to carry for addition and multiplication
     for(size_t i = 0; i < smaller.length(); i++){               
-        if(steal != 1){
-            digit1 = larger[larger.length()-1-i] - '0'; 
-            digit2 = smaller[smaller.length()-1-i] - '0';
-            digit = digit1 - digit2;
+        if(steal != 1){                                         //If there was no carry needed from previous iteration
+            digit1 = larger[larger.length()-1-i] - '0';         
+            digit2 = smaller[smaller.length()-1-i] - '0';       //digits 1 and 2 used to avoid errors during calculation 
+            digit = digit1 - digit2;                            //Calculate value of new digit
         }else{
             digit1 = larger[larger.length()-1-i] - '0';
             digit2 = smaller[smaller.length()-1-i] - '0';
-            digit = digit1 - digit2 - 1;
+            digit = digit1 - digit2 - 1;                        //If previous iteration required carry over, reduce calculation by 1
             steal = 0;
         }
-        if(digit < 0){
-            digit += B;
-            steal = 1;
-        }
-        answer = to_string(digit) + answer;
+        if(digit < 0){                                          //Check for carry
+            digit += B;                                         
+            steal = 1;                                          //Set steal variable to affect next iteration
+        }           
+        answer = to_string(digit) + answer;                     //Stringify digit for answer prepending 
     }
     return answer;    
 }
 
 string karatsuba(string I1, string I2, int B){
     string answer;
-    //Find Length of numbers
-    float n = max(I1.length(), I2.length());
-
-    //Base Case for n = 1
-    if(I1.length() == 1 || I2.length() == 1){
-        answer = mult(I1, I2, B);
+    float n = max(I1.length(), I2.length());                //Find max length of two numbers (n)
+    if(I1.length() == 1 || I2.length() == 1){               //Base Case 
+        answer = mult(I1, I2, B);                           //Use regular multiplication when one of numbers has 1 digit
         return answer;
     }
     
-    //Append leading zeros if needed 
     int numOfAppend;
-    if(I1.length() != n){
+    if(I1.length() != n){                                   //Append leading zeros if needed 
         numOfAppend = n - I1.length();
         for(int i = 0; i < numOfAppend; i++){
             I1 = '0' + I1; 
@@ -169,10 +163,9 @@ string karatsuba(string I1, string I2, int B){
         }
     }
 
-    //split numbers into parts 
     string x1, x0, y1, y0;
     int half = ceil(n/2);
-    for(int i = 0; i < n; i++){
+    for(int i = 0; i < n; i++){                 //Split numbers into parts 
         if(i < floor(n/2)){
             x1 += I1[i];
             y1 += I2[i];
@@ -181,27 +174,21 @@ string karatsuba(string I1, string I2, int B){
             y0 += I2[i];
         }
     }
-    
-    //Make z2, z1 and z0
-    string P0, P1, P2;
 
-    //Recursive call to z's
+    string P0, P1, P2;                                      //Recursive calls to karatsuba to calculate P0, P1 and P2
     P0 = karatsuba(x0, y0, B);
     P1 = karatsuba(x1, y1, B);
     P2 = karatsuba((add(x0, x1, B)), add(y0, y1, B), B);
+    string sub = subt(subt(P2, P1, B), P0, B);              //Subtract to find P2 - P1 - P0
 
-    //Subtract to find P2 - P1 - P0
-    string sub = subt(subt(P2, P1, B), P0, B);
-
-    //Append zeros for return
-    for(int i = 0; i < (half*2); i++){
+    for(int i = 0; i < (half*2); i++){                      //Append zeros for return 
         P1 += '0';
     }
     for(int i = 0; i < half; i++){
         sub += '0';
     }
 
-    answer = add(add(P1, sub, B), P0, B);
+    answer = add(add(P1, sub, B), P0, B);                   //Final Calculation 
     return answer;
 }
 
@@ -221,9 +208,8 @@ int main(){
     string ansadd = add(I1, I2, B);                             //Function Calls
     string ansmult = karatsuba(I1, I2, B);
     
-    //Cleans answer of leading zeros
     int leadingZero;
-    for(size_t i = 0; i < ansmult.length(); i++){
+    for(size_t i = 0; i < ansmult.length(); i++){               //Cleans answer of leading zeros
         if(ansmult[i] == '0'){
             leadingZero = 1;
         }else{
