@@ -16,7 +16,7 @@ string mult(string I1, string I2, int B){
             }else{
                 carry = 0;                          //No carry necessary, therefore reset state of carry variable
             }
-            answer = to_string(digit) + answer;      //Prepend next digit to front of answer
+            answer = to_string(digit) + answer;     //Prepend next digit to front of answer
         }
         answer = to_string(carry) + answer;
     }else{                                          //Same steps if I1 is the single digit number
