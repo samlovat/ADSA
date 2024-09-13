@@ -346,6 +346,10 @@ void insert(Node* root, int value, AVL* Tree){
 }
 
 void inorder(Node* currNode){
+    if(currNode == nullptr){
+        cout << "EMPTY" << endl;
+    }
+
     if(currNode->Left != nullptr){
         inorder(currNode->Left);
     }
@@ -357,6 +361,10 @@ void inorder(Node* currNode){
 }
 
 void postorder(Node* currNode){
+    if(currNode == nullptr){
+        cout << "EMPTY" << endl;
+    }
+
     if(currNode->Left != nullptr){
         postorder(currNode->Left);
     }
@@ -368,6 +376,10 @@ void postorder(Node* currNode){
 }
 
 void preorder(Node* currNode){
+    if(currNode == nullptr){
+        cout << "EMPTY" << endl;
+    }
+
     //Print this node
     cout << currNode->getValue() << " ";
 
