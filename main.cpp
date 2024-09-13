@@ -389,7 +389,12 @@ int main(){
     string input;
     int nowPrint = 0;
     int valInt;
+    int counter = 0;
     while(nowPrint == 0){
+        if(counter == 100){
+            nowPrint = 1;
+            break;
+        }
         cin >> input;
         valInt = 0;
         if(input[0] == 'A'){
@@ -411,6 +416,7 @@ int main(){
             inorder(myTree->Root);
             nowPrint = 1;
         }
+        counter++;
     }
     return 0;
     //Scanning first letter to discern whether user wants to insert or delete
