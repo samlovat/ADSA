@@ -140,7 +140,6 @@ class AVL{
 void LL(Node* Grandparent, AVL* Tree){
     Node* gpaPar = nullptr;
     Node* Parent = Grandparent->Left;
-    Node* Child = Parent->Left;
     int gpaIsLeft = 0;
     int root = 0;
     if(Grandparent->Parent != nullptr){
@@ -177,7 +176,6 @@ void LL(Node* Grandparent, AVL* Tree){
 void RR(Node* Grandparent, AVL* Tree){
     Node* gpaPar = nullptr;
     Node* Parent = Grandparent->Right;
-    Node* Child = Parent->Right;
     int gpaIsLeft = 0;
     int root = 0;
     if(Grandparent->Parent != nullptr){
@@ -412,7 +410,7 @@ int main(){
         if(input[0] == 'A'){
             string value = input.substr(1);
             // cout << value << endl;
-            for(int i = 0; i < value.length(); i++){
+            for(size_t i = 0; i < value.length(); i++){
                 valInt = valInt*10 + value[i] - '0';
             }
             // cout << valInt << endl;
