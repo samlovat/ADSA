@@ -137,19 +137,141 @@ class AVL{
         void del(int a);
 };
 
-void RL(Node* Grandparent, AVL* Tree){
+void LL(Node* Grandparent, AVL* Tree){
     Node* gpaPar = nullptr;
-    Node* Parent = Grandparent->Right;
+    Node* Parent = Grandparent->Left;
     Node* Child = Parent->Left;
+    int gpaIsLeft = 0;
     int root = 0;
     if(Grandparent->Parent != nullptr){
         // cout << "GRANDPA HAS A PARENT here is gpa: " << Grandparent->getValue() << ": my parent is: " << Grandparent->Parent->getValue() << endl;
         gpaPar = Grandparent->Parent;
+        //Check if gpa is right or left of its parent
+        if(gpaPar->Left->getValue() == Grandparent->getValue()){
+            gpaIsLeft = 1;
+        }
     }else{
         //Reset root node 
         // cout << "RESETTING NODE" << endl;
         root = 1;
-        Tree->Root = Grandparent->Right->Left;
+        Tree->Root = Parent;
+    }
+    if(root == 1){
+        Grandparent->Left = Parent->Right;
+        Grandparent->Parent = Parent;
+        Parent->Right = Grandparent;
+    }else{
+        if(gpaIsLeft == 1){
+            gpaPar->Left = Parent;
+        }else{
+            gpaPar->Right = Parent;
+        }
+        Grandparent->Left = Parent->Right;
+        Grandparent->Parent = Parent;
+        Parent->Right = Grandparent;
+        Parent->Parent = gpaPar;
+    }
+    return;
+}
+
+void RR(Node* Grandparent, AVL* Tree){
+    Node* gpaPar = nullptr;
+    Node* Parent = Grandparent->Right;
+    Node* Child = Parent->Right;
+    int gpaIsLeft = 0;
+    int root = 0;
+    if(Grandparent->Parent != nullptr){
+        // cout << "GRANDPA HAS A PARENT here is gpa: " << Grandparent->getValue() << ": my parent is: " << Grandparent->Parent->getValue() << endl;
+        gpaPar = Grandparent->Parent;
+        //Check if gpa is right or left of its parent
+        if(gpaPar->Left->getValue() == Grandparent->getValue()){
+            gpaIsLeft = 1;
+        }
+    }else{
+        //Reset root node 
+        // cout << "RESETTING NODE" << endl;
+        root = 1;
+        Tree->Root = Parent;
+    }
+    if(root == 1){
+        Grandparent->Right = Parent->Left;
+        Grandparent->Parent = Parent;
+        Parent->Left = Grandparent;
+    }else{
+        if(gpaIsLeft == 1){
+            gpaPar->Left = Parent;
+        }else{
+            gpaPar->Right = Parent;
+        }
+        Grandparent->Right = Parent->Left;
+        Grandparent->Parent = Parent;
+        Parent->Left = Grandparent;
+        Parent->Parent = gpaPar;
+    }
+    return;
+}
+
+void LR(Node* Grandparent, AVL* Tree){
+    Node* gpaPar = nullptr;
+    Node* Parent = Grandparent->Left;
+    Node* Child = Parent->Right;
+    int gpaIsLeft = 0;
+    int root = 0;
+    if(Grandparent->Parent != nullptr){
+        // cout << "GRANDPA HAS A PARENT here is gpa: " << Grandparent->getValue() << ": my parent is: " << Grandparent->Parent->getValue() << endl;
+        gpaPar = Grandparent->Parent;
+        //Check if gpa is right or left of its parent
+        if(gpaPar->Left->getValue() == Grandparent->getValue()){
+            gpaIsLeft = 1;
+        }
+    }else{
+        //Reset root node 
+        // cout << "RESETTING NODE" << endl;
+        root = 1;
+        Tree->Root = Child;
+    }
+    if(root == 1){
+        Grandparent->Left = Child->Right;
+        Grandparent->Parent = Child;
+        Parent->Parent = Child;
+        Parent->Right = Child->Left;
+        Child->Right = Grandparent;
+        Child->Left = Parent;
+    }else{
+        if(gpaIsLeft == 1){
+            gpaPar->Left = Parent;
+        }else{
+            gpaPar->Right = Parent;
+        }
+        Grandparent->Left = Child->Right;
+        Grandparent->Parent = Child;
+        Parent->Parent = Child;
+        Parent->Right = Child->Left;
+        Child->Parent = gpaPar;
+        Child->Right = Grandparent;
+        Child->Left = Parent;
+    }
+    return;
+}
+
+void RL(Node* Grandparent, AVL* Tree){
+    Node* gpaPar = nullptr;
+    Node* Parent = Grandparent->Right;
+    Node* Child = Parent->Left;
+    int gpaIsLeft = 0;
+    int root = 0;
+    if(Grandparent->Parent != nullptr){
+        // cout << "GRANDPA HAS A PARENT here is gpa: " << Grandparent->getValue() << ": my parent is: " << Grandparent->Parent->getValue() << endl;
+        gpaPar = Grandparent->Parent;
+        //Check if gpa is right or left of its parent
+        if(gpaPar->Left->getValue() == Grandparent->getValue()){
+            gpaIsLeft = 1;
+        }
+    }else{
+        //Reset root node 
+        // cout << "RESETTING NODE" << endl;
+        root = 1;
+        Tree->Root = Child;
     }
     if(root == 1){
         Grandparent->Right = Grandparent->Right->Left->Left;
@@ -159,7 +281,11 @@ void RL(Node* Grandparent, AVL* Tree){
         Child->Left = Grandparent;
         Child->Right = Parent;
     }else{
-        gpaPar->Right = Child;
+        if(gpaIsLeft == 1){
+            gpaPar->Left = Parent;
+        }else{
+            gpaPar->Right = Parent;
+        }
         Grandparent->Right = Grandparent->Right->Left->Left;
         Grandparent->Parent = Child;
         Parent->Parent = Child;
@@ -198,66 +324,50 @@ void insert(Node* root, int value, AVL* Tree){
     if(balance > 1){
         if(root->Left->getBalance() >= 1){
             //LL
+            cout << "LL" << endl;
+            LL(root, Tree);
         }else{
             //LR
+            cout << "LR" << endl;
+            LR(root, Tree);
         }
     }else if(balance < -1){
         if(root->Right->getBalance() <= -1){
             //RR
+            cout << "RR" << endl;
+            RR(root, Tree);
         }else{
             //RL
-            // cout << "PERFORMING RL" << endl;
+            cout << "RL" << endl;
             RL(root, Tree);
         }
     }
     return;
 }
 
+void inorder(Node* currNode){
+    if(currNode->Left != nullptr){
+        inorder(currNode->Left);
+    }
+    cout << currNode->getValue() << " ";
+    if(currNode->Right != nullptr){
+        inorder(currNode->Right);
+    }
+    return;
+}
+
+void postorder(Node* currNode){
+    if(currNode->Left != nullptr){
+        postorder(currNode->Left);
+    }
+    if(currNode->Right != nullptr){
+        postorder(currNode->Right);
+    }
+    cout << currNode->getValue() << " ";
+    return;
+}
 
 void preorder(Node* currNode){
-    //From AVLTree Root do preorder print 
-//     cout << "Root is: " << tree->Root->getValue() << endl;
-//     Node* Par = tree->Root;
-//     int moreChild = 1;
-//     int leftDone = 0;
-//     int rightTree = 0;
-//     int leftTree = 0;
-//     Node* Chi;
-//     while(moreChild == 1){
-//         if(leftDone == 0){
-//             if(Par->Left != nullptr){
-//                 cout << Par->Left->getValue() << endl;
-//                 Par = Par->Left;
-//                 leftTree = 1;
-//                 continue;
-//             }
-//         }
-//         if(Par->Right != nullptr){
-//             cout << Par->Right->getValue() << endl;
-//             Par = Par->Right;
-//             rightTree++;
-//             leftDone = 0;
-//             continue;
-//         }
-//         if(leftTree == 1){
-//             Par = Par->Parent;
-//             leftDone = 1;
-//             leftTree = 0;
-//         }else{
-//             while(rightTree != 0){
-//                 Par = Par->Parent;
-//                 rightTree--;
-//             }
-//             if(Par->Parent != nullptr){
-//                 Par = Par->Parent;
-//                 leftDone = 1;
-//             }else{
-//                 moreChild = 0;
-//             }
-//         }
-//     }
-    //cout << "Starting preorder" << endl;
-
     //Print this node
     cout << currNode->getValue() << " ";
 
@@ -265,12 +375,11 @@ void preorder(Node* currNode){
     if(currNode->Left != nullptr){
         preorder(currNode->Left);
     }
+    //if right{print right}
     if(currNode->Right != nullptr){
         preorder(currNode->Right);
     }
     return;
-    //if right{print right}
-    //else {return}
 }
 
 int main(){
@@ -291,9 +400,15 @@ int main(){
             }
             // cout << valInt << endl;
             // cout << input[1] - '0' << endl;
-            insert(myTree->Root , input[1] - '0', myTree);
-        }else if(input[0] == 'P'){
+            insert(myTree->Root , valInt, myTree);
+        }else if(input == "PRE"){
             preorder(myTree->Root);
+            nowPrint = 1;
+        }else if(input == "POST"){
+            postorder(myTree->Root);
+            nowPrint = 1;
+        }else if(input == "IN"){
+            inorder(myTree->Root);
             nowPrint = 1;
         }
     }
