@@ -324,21 +324,21 @@ void insert(Node* root, int value, AVL* Tree){
     if(balance > 1){
         if(root->Left->getBalance() >= 1){
             //LL
-            cout << "LL" << endl;
+            // cout << "LL" << endl;
             LL(root, Tree);
         }else{
             //LR
-            cout << "LR" << endl;
+            // cout << "LR" << endl;
             LR(root, Tree);
         }
     }else if(balance < -1){
         if(root->Right->getBalance() <= -1){
             //RR
-            cout << "RR" << endl;
+            // cout << "RR" << endl;
             RR(root, Tree);
         }else{
             //RL
-            cout << "RL" << endl;
+            // cout << "RL" << endl;
             RL(root, Tree);
         }
     }
