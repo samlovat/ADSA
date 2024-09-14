@@ -116,6 +116,9 @@ void preorder(Node* currNode){
 
     //Print this node
     cout << currNode->getValue() << " ";
+    // if(currNode->getValue() == 15){
+    //     cout << currNode->getValue() << ", my left is " << currNode->Left->getValue() << " and my right is " << currNode->Right->getValue() << endl;
+    // }
 
     //if left {print left}
     if(currNode->Left != nullptr){
@@ -471,11 +474,13 @@ void del(Node* root, int value, AVL* Tree){
             // preorder(root);
             del(root->Left, max, Tree);
         }else if(root->Left != nullptr && root->Right == nullptr){
+            // cout << "Only left exists" << endl;
         //deletee node has only left leaf
             if(isRoot == 0){
                 if(rootParent->Right != nullptr){
                     if(rootParent->Right->getValue() == root->getValue()){
                         rootParent->Right = root->Left;
+                        // cout << rootParent->getValue() << " right is " << root->Left->getValue() << endl;
                     }else{
                         rootParent->Left = root->Left;
                     }
@@ -515,8 +520,9 @@ void del(Node* root, int value, AVL* Tree){
                 if(rootParent->Right != nullptr){
                     if(rootParent->Right->getValue() == root->getValue()){
                         rootParent->Right = nullptr;
+                    }else{
+                        rootParent->Left = nullptr;
                     }
-                    rootParent->Left = nullptr;
                 }else{
                     rootParent->Left = nullptr;
                 }
@@ -553,6 +559,8 @@ void del(Node* root, int value, AVL* Tree){
     }
     // cout << "Retracing balance after deletion for root value: " << root->getValue() << endl;
     balance = root->getBalance();
+    // cout << balance << endl;
+    // cout << root->getValue() << " left is " << root->Left->getValue() << " and the right is " << root->Right->getValue() << endl;
     if(balance > 1){
         if(root->Left->getBalance() >= 1){
             //LL
@@ -592,12 +600,11 @@ void insert(Node* root, int value, AVL* Tree){
             root->Right = new Node(value, root);
         }
     }else if(value < root->getValue()){
-        if(value < root->getValue()){
-            if(root->Left != nullptr){
-                insert(root->Left, value, Tree);
-            }else{
-                root->Left = new Node(value, root);
-            }
+        if(root->Left != nullptr){
+            insert(root->Left, value, Tree);
+        }else{
+            root->Left = new Node(value, root);
+            // cout << "New node " << root->Left->getValue() << " with a parent of " << root->Left->Parent->getValue() << endl;
         }
     }else{
         //Already exists in tree
