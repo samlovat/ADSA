@@ -25,18 +25,18 @@ class Node{
         int getBalance(){
             int leftBalance = 0;
             int rightBalance = 0;
-            cout << "Checking balance for node with value: " << this->getValue() << endl;
+            // cout << "Checking balance for node with value: " << this->getValue() << endl;
             if(Left != nullptr){
                 // cout << "There are left children" << endl;
-                cout << "Checking the max height of " << Left->getValue() << endl;
+                // cout << "Checking the max height of " << Left->getValue() << endl;
                 leftBalance = Left->checkChildren();
             }
             if(Right != nullptr){
                 // cout << "There are right children" << endl;
-                cout << "Checking the max height of " << Right->getValue() << endl;
+                // cout << "Checking the max height of " << Right->getValue() << endl;
                 rightBalance = Right->checkChildren();
             }
-            cout << "Left Balance: " << leftBalance << " Right Balance: " << rightBalance << endl;
+            // cout << "Left Balance: " << leftBalance << " Right Balance: " << rightBalance << endl;
             // cout << "LBALANCE: " << leftBalance << "RBALANCE: " << rightBalance << endl;
             return leftBalance - rightBalance;
         }
@@ -71,7 +71,7 @@ class Node{
                 leftHeight = 1 + this->Left->checkChildren();
             }
             int max = std::max(leftHeight, rightHeight);
-            cout << "Max is: " << max << endl;
+            // cout << "Max is: " << max << endl;
             return max;
         }
 };
@@ -255,13 +255,13 @@ void LL(Node* Grandparent, AVL* Tree){
 }
 
 void RR(Node* Grandparent, AVL* Tree){
-    cout << "RR" << endl;
+    // cout << "RR" << endl;
     Node* gpaPar = nullptr;
     Node* Parent = Grandparent->Right;
     int gpaIsLeft = 0;
     int root = 0;
     if(Grandparent->Parent != nullptr){
-        cout << "GRANDPA HAS A PARENT here is gpa: " << Grandparent->getValue() << ": my parent is: " << Grandparent->Parent->getValue() << endl;
+        // cout << "GRANDPA HAS A PARENT here is gpa: " << Grandparent->getValue() << ": my parent is: " << Grandparent->Parent->getValue() << endl;
         gpaPar = Grandparent->Parent;
         //Check if gpa is right or left of its parent
         if(gpaPar->Left->getValue() == Grandparent->getValue()){
@@ -414,7 +414,6 @@ void del(Node* root, int value, AVL* Tree){
     //Search to find node
     int isRoot = 0;
     int balance;
-    int found = 0;
     //Check if tree is empty
     if(root == nullptr){
         return;
@@ -429,13 +428,13 @@ void del(Node* root, int value, AVL* Tree){
         //Node doesn't exist
         return;
     }else{
-        cout << "deleting " << value << endl;
+        // cout << "deleting " << value << endl;
         //Time to delete
         Node* rootParent;
         if(root->Parent != nullptr){
-            cout << "Looking for parent!" << endl;
+            // cout << "Looking for parent!" << endl;
             rootParent = root->Parent;
-            cout << rootParent->getValue() << endl;
+            // cout << rootParent->getValue() << endl;
         }else{
             isRoot = 1;
             rootParent = nullptr;
@@ -477,7 +476,7 @@ void del(Node* root, int value, AVL* Tree){
             return;
         }else if(root->Left == nullptr && root->Right != nullptr){
         //deletee node has only right leaf
-        cout << "Bingo" << endl;
+        // cout << "Bingo" << endl;
             if(isRoot == 0){
                 if(rootParent->Right != nullptr){
                     if(rootParent->Right->getValue() == root->getValue()){
@@ -497,7 +496,7 @@ void del(Node* root, int value, AVL* Tree){
             return;
         }else{
         //deletee has no leaves
-        cout << "deletee has no children" << endl;
+        // cout << "deletee has no children" << endl;
             if(isRoot == 0){
                 if(rootParent->Right != nullptr){
                     if(rootParent->Right->getValue() == root->getValue()){
@@ -538,7 +537,7 @@ void del(Node* root, int value, AVL* Tree){
         //     }
         // }
     }
-    cout << "Retracing balance after deletion for root value: " << root->getValue() << endl;
+    // cout << "Retracing balance after deletion for root value: " << root->getValue() << endl;
     balance = root->getBalance();
     if(balance > 1){
         if(root->Left->getBalance() >= 1){
@@ -588,7 +587,7 @@ void insert(Node* root, int value, AVL* Tree){
         }
     }
     int balance = root->getBalance();
-    cout << "balance after insert for node: " << root->getValue() << ": " << balance << endl;
+    // cout << "balance after insert for node: " << root->getValue() << ": " << balance << endl;
     if(balance > 1){
         if(root->Left->getBalance() >= 1){
             //LL
