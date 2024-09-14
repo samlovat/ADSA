@@ -125,7 +125,7 @@ void preorder(Node* currNode){
     //     cout << " has right node " << currNode->Right->getValue();
     // }
     // if(currNode->Parent != nullptr){
-    //     cout << " has Parent node " << currNode->Parent->getValue();
+    //     cout << " has Parent node " << currNode->Parent->getValue() << endl;
     // }
     // cout << "\n";
     // if(currNode->getValue() == 15){
@@ -227,6 +227,7 @@ class AVL{
 };
 
 void LL(Node* Grandparent, AVL* Tree){
+    // cout << "1" <<endl;
     Node* gpaPar = nullptr;
     Node* Parent = Grandparent->Left;
     int gpaIsLeft = 0;
@@ -238,8 +239,11 @@ void LL(Node* Grandparent, AVL* Tree){
         if(gpaPar->Left != nullptr){
             if(gpaPar->Left->getValue() == Grandparent->getValue()){
                 gpaIsLeft = 1;
+                
             }
+            // cout << gpaPar->Left->getValue() << endl;
         }
+        // cout << "2" <<endl;
     }else{
         //Reset root node 
         // cout << "RESETTING NODE" << endl;
@@ -249,7 +253,7 @@ void LL(Node* Grandparent, AVL* Tree){
     if(root == 1){
         Grandparent->Left = Parent->Right;
         if(Parent->Right != nullptr){
-            Parent->Right->Parent = Grandparent->Left;
+            Parent->Right->Parent = Grandparent;
         }
         Grandparent->Parent = Parent;
         Parent->Right = Grandparent;
@@ -257,16 +261,20 @@ void LL(Node* Grandparent, AVL* Tree){
     }else{
         if(gpaIsLeft == 1){
             gpaPar->Left = Parent;
+            // cout << "3" <<endl;
         }else{
             gpaPar->Right = Parent;
         }
         Grandparent->Left = Parent->Right;
+        // cout << "4" <<endl;
         if(Parent->Right != nullptr){
             Parent->Right->Parent = Grandparent;  
         }        
+        // cout << "5" <<endl;
         Grandparent->Parent = Parent;
         Parent->Right = Grandparent;
         Parent->Parent = gpaPar;
+        // cout << "6 for LL at " << Grandparent->getValue() << endl;
     }
     return;
 }
@@ -626,7 +634,7 @@ void insert(Node* root, int value, AVL* Tree){
     int balance = root->getBalance();
     // cout << "balance after insert for node: " << root->getValue() << ": " << balance << endl;
     if(balance > 1){
-        if(root->Left->getBalance() >= 1){
+        if(root->Left->getBalance() >= 0){
             //LL
             // cout << "LL" << endl;
             LL(root, Tree);
@@ -636,7 +644,7 @@ void insert(Node* root, int value, AVL* Tree){
             LR(root, Tree);
         }
     }else if(balance < -1){
-        if(root->Right->getBalance() <= -1){
+        if(root->Right->getBalance() <= 0){
             //RR
             if(root->Parent != nullptr){
                 // cout << "RR with " << root->getValue() << " whose parent is " << root->Parent->getValue() << endl;
