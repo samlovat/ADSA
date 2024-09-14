@@ -20,39 +20,113 @@ class Node{
         Node* Left;
         Node* Right;
         int getValue(){ return this->value; }
+        void setValue(int value_){ this->value = value_; }
 
         int getBalance(){
             int leftBalance = 0;
             int rightBalance = 0;
+            cout << "Checking balance for node with value: " << this->getValue() << endl;
             if(Left != nullptr){
-                leftBalance = Left->checkChildren(1);
+                // cout << "There are left children" << endl;
+                cout << "Checking the max height of " << Left->getValue() << endl;
+                leftBalance = Left->checkChildren();
             }
             if(Right != nullptr){
-                rightBalance = Right->checkChildren(1);
+                // cout << "There are right children" << endl;
+                cout << "Checking the max height of " << Right->getValue() << endl;
+                rightBalance = Right->checkChildren();
             }
-            // cout << "Left Balance: " << leftBalance << " Right Balance: " << rightBalance << endl;
+            cout << "Left Balance: " << leftBalance << " Right Balance: " << rightBalance << endl;
+            // cout << "LBALANCE: " << leftBalance << "RBALANCE: " << rightBalance << endl;
             return leftBalance - rightBalance;
         }
         
-        int checkChildren(int height){
+        int checkChildren(){
             // cout << "This nodes val is: " << this->getValue() << endl;
-            int leftHeight = height;
-            int rightHeight = height;
+            int leftHeight = 0;
+            int rightHeight = 0;
             // cout << "L: " << leftHeight << " R: " << rightHeight << " H: " << height << endl;
-            if(this->Left != nullptr){
-                leftHeight++;
-                // cout << leftHeight << endl;
-                Left->checkChildren(leftHeight);
+            // if(this->Left != nullptr){
+            //     leftHeight++;
+            //     cout << leftHeight << endl;
+            //     Left->checkChildren(leftHeight);
+            // }
+            // if(this->Right != nullptr){
+            //     cout << "Going right." << endl;
+            //     rightHeight++;
+            //     Right->checkChildren(rightHeight);
+            // }
+            // height = std::max(leftHeight, rightHeight);
+            // cout << "The max height is " << height << endl;
+            // return height;
+            
+            //Base case
+            if(this->Right == nullptr && this->Left == nullptr){
+                return 1;
             }
             if(this->Right != nullptr){
-                // cout << "Going right." << endl;
-                rightHeight++;
-                Right->checkChildren(rightHeight);
+                rightHeight = 1 + this->Right->checkChildren();
             }
-            height = std::max(leftHeight, rightHeight);
-            return height;
+            if(this->Left != nullptr){
+                leftHeight = 1 + this->Left->checkChildren();
+            }
+            int max = std::max(leftHeight, rightHeight);
+            cout << "Max is: " << max << endl;
+            return max;
         }
 };
+
+void inorder(Node* currNode){
+    if(currNode == nullptr){
+        cout << "EMPTY" << endl;
+        return;
+    }
+
+    if(currNode->Left != nullptr){
+        inorder(currNode->Left);
+    }
+    cout << currNode->getValue() << " ";
+    if(currNode->Right != nullptr){
+        inorder(currNode->Right);
+    }
+    return;
+}
+
+void postorder(Node* currNode){
+    if(currNode == nullptr){
+        cout << "EMPTY" << endl;
+        return;
+    }
+
+    if(currNode->Left != nullptr){
+        postorder(currNode->Left);
+    }
+    if(currNode->Right != nullptr){
+        postorder(currNode->Right);
+    }
+    cout << currNode->getValue() << " ";
+    return;
+}
+
+void preorder(Node* currNode){
+    if(currNode == nullptr){
+        cout << "EMPTY" << endl;
+        return;
+    }
+
+    //Print this node
+    cout << currNode->getValue() << " ";
+
+    //if left {print left}
+    if(currNode->Left != nullptr){
+        preorder(currNode->Left);
+    }
+    //if right{print right}
+    if(currNode->Right != nullptr){
+        preorder(currNode->Right);
+    }
+    return;
+}
 
 class AVL{
     public:
@@ -134,7 +208,7 @@ class AVL{
 
         }*/
 
-        void del(int a);
+        // void del(int a);
 };
 
 void LL(Node* Grandparent, AVL* Tree){
@@ -157,8 +231,12 @@ void LL(Node* Grandparent, AVL* Tree){
     }
     if(root == 1){
         Grandparent->Left = Parent->Right;
+        if(Parent->Right != nullptr){
+            Parent->Right->Parent = Grandparent->Left;
+        }
         Grandparent->Parent = Parent;
         Parent->Right = Grandparent;
+        Parent->Parent = gpaPar;
     }else{
         if(gpaIsLeft == 1){
             gpaPar->Left = Parent;
@@ -166,6 +244,9 @@ void LL(Node* Grandparent, AVL* Tree){
             gpaPar->Right = Parent;
         }
         Grandparent->Left = Parent->Right;
+        if(Parent->Right != nullptr){
+            Parent->Right->Parent = Grandparent->Left;  
+        }        
         Grandparent->Parent = Parent;
         Parent->Right = Grandparent;
         Parent->Parent = gpaPar;
@@ -174,12 +255,13 @@ void LL(Node* Grandparent, AVL* Tree){
 }
 
 void RR(Node* Grandparent, AVL* Tree){
+    cout << "RR" << endl;
     Node* gpaPar = nullptr;
     Node* Parent = Grandparent->Right;
     int gpaIsLeft = 0;
     int root = 0;
     if(Grandparent->Parent != nullptr){
-        // cout << "GRANDPA HAS A PARENT here is gpa: " << Grandparent->getValue() << ": my parent is: " << Grandparent->Parent->getValue() << endl;
+        cout << "GRANDPA HAS A PARENT here is gpa: " << Grandparent->getValue() << ": my parent is: " << Grandparent->Parent->getValue() << endl;
         gpaPar = Grandparent->Parent;
         //Check if gpa is right or left of its parent
         if(gpaPar->Left->getValue() == Grandparent->getValue()){
@@ -193,8 +275,12 @@ void RR(Node* Grandparent, AVL* Tree){
     }
     if(root == 1){
         Grandparent->Right = Parent->Left;
+        if(Parent->Left != nullptr){
+            Parent->Left->Parent = Grandparent->Right;
+        }
         Grandparent->Parent = Parent;
         Parent->Left = Grandparent;
+        Parent->Parent = gpaPar;
     }else{
         if(gpaIsLeft == 1){
             gpaPar->Left = Parent;
@@ -202,6 +288,9 @@ void RR(Node* Grandparent, AVL* Tree){
             gpaPar->Right = Parent;
         }
         Grandparent->Right = Parent->Left;
+        if(Parent->Left != nullptr){
+            Parent->Left->Parent = Grandparent->Right;
+        }
         Grandparent->Parent = Parent;
         Parent->Left = Grandparent;
         Parent->Parent = gpaPar;
@@ -230,11 +319,18 @@ void LR(Node* Grandparent, AVL* Tree){
     }
     if(root == 1){
         Grandparent->Left = Child->Right;
+        if(Child->Right != nullptr){
+            Child->Right->Parent = Grandparent->Left;
+        }        
         Grandparent->Parent = Child;
         Parent->Parent = Child;
         Parent->Right = Child->Left;
+        if(Child->Left != nullptr){
+            Child->Left->Parent = Parent->Right;
+        }
         Child->Right = Grandparent;
         Child->Left = Parent;
+        Child->Parent = gpaPar;
     }else{
         if(gpaIsLeft == 1){
             gpaPar->Left = Parent;
@@ -242,9 +338,15 @@ void LR(Node* Grandparent, AVL* Tree){
             gpaPar->Right = Parent;
         }
         Grandparent->Left = Child->Right;
+        if(Child->Right != nullptr){
+            Child->Right->Parent = Grandparent->Left;
+        }
         Grandparent->Parent = Child;
         Parent->Parent = Child;
         Parent->Right = Child->Left;
+        if(Child->Left != nullptr){
+            Child->Left->Parent = Parent->Right;
+        }
         Child->Parent = gpaPar;
         Child->Right = Grandparent;
         Child->Left = Parent;
@@ -272,25 +374,192 @@ void RL(Node* Grandparent, AVL* Tree){
         Tree->Root = Child;
     }
     if(root == 1){
-        Grandparent->Right = Grandparent->Right->Left->Left;
+        Grandparent->Right = Child->Left;
+        if(Child->Left != nullptr){
+            Child->Left->Parent = Grandparent->Right;
+        }       
         Grandparent->Parent = Child;
         Parent->Parent = Child;
         Parent->Left = Child->Right;
+        if(Child->Right != nullptr){
+            Child->Right->Parent = Parent->Left;
+        }        
         Child->Left = Grandparent;
         Child->Right = Parent;
+        Child->Parent = gpaPar;
     }else{
         if(gpaIsLeft == 1){
             gpaPar->Left = Parent;
         }else{
             gpaPar->Right = Parent;
         }
-        Grandparent->Right = Grandparent->Right->Left->Left;
+        Grandparent->Right = Child->Left;
+        if(Child->Left != nullptr){
+            Child->Left->Parent = Grandparent->Right;
+        }        
         Grandparent->Parent = Child;
         Parent->Parent = Child;
         Parent->Left = Child->Right;
+        if(Child->Right != nullptr){
+            Child->Right->Parent = Parent->Left;
+        }        
         Child->Parent = gpaPar;
         Child->Left = Grandparent;
         Child->Right = Parent;
+    }
+    return;
+}
+
+void del(Node* root, int value, AVL* Tree){
+    //Search to find node
+    int isRoot = 0;
+    int balance;
+    int found = 0;
+    //Check if tree is empty
+    if(root == nullptr){
+        return;
+    }
+
+    //Compare with currnode
+    if(value < root->getValue() && root->Left != nullptr){
+        del(root->Left, value, Tree);
+    }else if(value > root->getValue() && root->Right != nullptr){
+        del(root->Right, value, Tree);        
+    }else if(value != root->getValue()){
+        //Node doesn't exist
+        return;
+    }else{
+        cout << "deleting " << value << endl;
+        //Time to delete
+        Node* rootParent;
+        if(root->Parent != nullptr){
+            cout << "Looking for parent!" << endl;
+            rootParent = root->Parent;
+            cout << rootParent->getValue() << endl;
+        }else{
+            isRoot = 1;
+            rootParent = nullptr;
+        }
+        if(root->Left != nullptr && root->Right != nullptr){
+        //deletee node has left and right leaves
+            int goRight = 1;
+            Node* currNode = root->Right;
+            int max = currNode->getValue();
+            while(goRight == 1){
+                //Search for closest node on right
+                if(currNode->Left != nullptr){
+                    currNode = currNode->Left;
+                    max = std::max(max, currNode->getValue());
+                }else{
+                    goRight = 0;
+                }
+            }
+            root->setValue(max);
+            preorder(root);
+            del(root->Right, max, Tree);
+        }else if(root->Left != nullptr && root->Right == nullptr){
+        //deletee node has only left leaf
+            if(isRoot == 0){
+                if(rootParent->Right != nullptr){
+                    if(rootParent->Right->getValue() == root->getValue()){
+                        rootParent->Right = root->Left;
+                    }else{
+                        rootParent->Left = root->Left;
+                    }
+                }else{
+                    rootParent->Left = root->Left;
+                }
+            }else{
+                Tree->Root = root->Left;
+            }
+            root->Left->Parent = rootParent;
+            delete root;
+            return;
+        }else if(root->Left == nullptr && root->Right != nullptr){
+        //deletee node has only right leaf
+        cout << "Bingo" << endl;
+            if(isRoot == 0){
+                if(rootParent->Right != nullptr){
+                    if(rootParent->Right->getValue() == root->getValue()){
+                        rootParent->Right = root->Right;
+                    }else{
+                        rootParent->Left = root->Right;          
+                    }
+                }else{
+                    rootParent->Left = root->Right;
+                }
+            }else{
+                Tree->Root = root->Right;
+            }
+            root->Right->Parent = rootParent;
+
+            delete root;
+            return;
+        }else{
+        //deletee has no leaves
+        cout << "deletee has no children" << endl;
+            if(isRoot == 0){
+                if(rootParent->Right != nullptr){
+                    if(rootParent->Right->getValue() == root->getValue()){
+                        rootParent->Right = nullptr;
+                    }
+                    rootParent->Left = nullptr;
+                }else{
+                    rootParent->Left = nullptr;
+                }
+            }else{
+                Tree->Root = nullptr;
+            }
+            delete root;
+            return;
+        }
+        // if(rootParent != nullptr){
+        //     balance = rootParent->getBalance();
+        //     if(balance > 1){
+        //         if(root->Left->getBalance() >= 1){
+        //             //LL
+        //             // cout << "LL" << endl;
+        //             LL(root, Tree);
+        //         }else{
+        //             //LR
+        //             // cout << "LR" << endl;
+        //             LR(root, Tree);
+        //         }
+        //     }else if(balance < -1){
+        //         if(root->Right->getBalance() <= -1){
+        //             //RR
+        //             // cout << "RR" << endl;
+        //             RR(root, Tree);
+        //         }else{
+        //             //RL
+        //             // cout << "RL" << endl;
+        //             RL(root, Tree);
+        //         }
+        //     }
+        // }
+    }
+    cout << "Retracing balance after deletion for root value: " << root->getValue() << endl;
+    balance = root->getBalance();
+    if(balance > 1){
+        if(root->Left->getBalance() >= 1){
+            //LL
+            // cout << "LL" << endl;
+            LL(root, Tree);
+        }else{
+            //LR
+            // cout << "LR" << endl;
+            LR(root, Tree);
+        }
+    }else if(balance < -1){
+        if(root->Right->getBalance() <= -1){
+            //RR
+            // cout << "RR" << endl;
+            RR(root, Tree);
+        }else{
+            //RL
+            // cout << "RL" << endl;
+            RL(root, Tree);
+        }
     }
     return;
 }
@@ -319,6 +588,7 @@ void insert(Node* root, int value, AVL* Tree){
         }
     }
     int balance = root->getBalance();
+    cout << "balance after insert for node: " << root->getValue() << ": " << balance << endl;
     if(balance > 1){
         if(root->Left->getBalance() >= 1){
             //LL
@@ -339,55 +609,6 @@ void insert(Node* root, int value, AVL* Tree){
             // cout << "RL" << endl;
             RL(root, Tree);
         }
-    }
-    return;
-}
-
-void inorder(Node* currNode){
-    if(currNode == nullptr){
-        cout << "EMPTY" << endl;
-    }
-
-    if(currNode->Left != nullptr){
-        inorder(currNode->Left);
-    }
-    cout << currNode->getValue() << " ";
-    if(currNode->Right != nullptr){
-        inorder(currNode->Right);
-    }
-    return;
-}
-
-void postorder(Node* currNode){
-    if(currNode == nullptr){
-        cout << "EMPTY" << endl;
-    }
-
-    if(currNode->Left != nullptr){
-        postorder(currNode->Left);
-    }
-    if(currNode->Right != nullptr){
-        postorder(currNode->Right);
-    }
-    cout << currNode->getValue() << " ";
-    return;
-}
-
-void preorder(Node* currNode){
-    if(currNode == nullptr){
-        cout << "EMPTY" << endl;
-    }
-
-    //Print this node
-    cout << currNode->getValue() << " ";
-
-    //if left {print left}
-    if(currNode->Left != nullptr){
-        preorder(currNode->Left);
-    }
-    //if right{print right}
-    if(currNode->Right != nullptr){
-        preorder(currNode->Right);
     }
     return;
 }
@@ -416,6 +637,15 @@ int main(){
             // cout << valInt << endl;
             // cout << input[1] - '0' << endl;
             insert(myTree->Root , valInt, myTree);
+        }else if(input[0] == 'D'){
+            string value = input.substr(1);
+            // cout << value << endl;
+            for(size_t i = 0; i < value.length(); i++){
+                valInt = valInt*10 + value[i] - '0';
+            }
+            // cout << valInt << endl;
+            // cout << input[1] - '0' << endl;
+            del(myTree->Root , valInt, myTree);
         }else if(input == "PRE"){
             preorder(myTree->Root);
             nowPrint = 1;
