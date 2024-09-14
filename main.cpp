@@ -26,15 +26,15 @@ class Node{
             int leftBalance = 0;
             int rightBalance = 0;
             // cout << "Checking balance for node with value: " << this->getValue() << endl;
-            if(Left != nullptr){
+            if(this->Left != nullptr){
                 // cout << "There are left children" << endl;
                 // cout << "Checking the max height of " << Left->getValue() << endl;
-                leftBalance = Left->checkChildren();
+                leftBalance = this->Left->checkChildren();
             }
-            if(Right != nullptr){
+            if(this->Right != nullptr){
                 // cout << "There are right children" << endl;
                 // cout << "Checking the max height of " << Right->getValue() << endl;
-                rightBalance = Right->checkChildren();
+                rightBalance = this->Right->checkChildren();
             }
             // cout << "Left Balance: " << leftBalance << " Right Balance: " << rightBalance << endl;
             // cout << "LBALANCE: " << leftBalance << "RBALANCE: " << rightBalance << endl;
@@ -42,7 +42,6 @@ class Node{
         }
         
         int checkChildren(){
-            // cout << "This nodes val is: " << this->getValue() << endl;
             int leftHeight = 0;
             int rightHeight = 0;
             // cout << "L: " << leftHeight << " R: " << rightHeight << " H: " << height << endl;
@@ -62,12 +61,15 @@ class Node{
             
             //Base case
             if(this->Right == nullptr && this->Left == nullptr){
+                // cout << "returning 1" << endl;
                 return 1;
             }
             if(this->Right != nullptr){
+                // cout << "the right of " << this->getValue() << " is " << this->Right->getValue() << endl; 
                 rightHeight = 1 + this->Right->checkChildren();
             }
             if(this->Left != nullptr){
+                // cout << "the left of " << this->getValue() << " is " << this->Left->getValue() << endl; 
                 leftHeight = 1 + this->Left->checkChildren();
             }
             int max = std::max(leftHeight, rightHeight);
@@ -116,6 +118,16 @@ void preorder(Node* currNode){
 
     //Print this node
     cout << currNode->getValue() << " ";
+    // if(currNode->Left != nullptr){
+    //     cout << " has left node " << currNode->Left->getValue();
+    // }
+    // if(currNode->Right != nullptr){
+    //     cout << " has right node " << currNode->Right->getValue();
+    // }
+    // if(currNode->Parent != nullptr){
+    //     cout << " has Parent node " << currNode->Parent->getValue();
+    // }
+    // cout << "\n";
     // if(currNode->getValue() == 15){
     //     cout << currNode->getValue() << ", my left is " << currNode->Left->getValue() << " and my right is " << currNode->Right->getValue() << endl;
     // }
@@ -458,6 +470,7 @@ void del(Node* root, int value, AVL* Tree){
         }
         if(root->Left != nullptr && root->Right != nullptr){
         //deletee node has left and right leaves
+        // cout << root->getValue() << " has Left and Right" << endl;
             int goLeft = 1;
             Node* currNode = root->Left;
             int max = currNode->getValue();
@@ -474,7 +487,7 @@ void del(Node* root, int value, AVL* Tree){
             // preorder(root);
             del(root->Left, max, Tree);
         }else if(root->Left != nullptr && root->Right == nullptr){
-            // cout << "Only left exists" << endl;
+            // cout << root->getValue() << " has Left only" << endl;
         //deletee node has only left leaf
             if(isRoot == 0){
                 if(rootParent->Right != nullptr){
@@ -495,7 +508,7 @@ void del(Node* root, int value, AVL* Tree){
             return;
         }else if(root->Left == nullptr && root->Right != nullptr){
         //deletee node has only right leaf
-        // cout << "Bingo" << endl;
+            // cout << root->getValue() << " has Right only" << endl;
             if(isRoot == 0){
                 if(rootParent->Right != nullptr){
                     if(rootParent->Right->getValue() == root->getValue()){
@@ -515,7 +528,7 @@ void del(Node* root, int value, AVL* Tree){
             return;
         }else{
         //deletee has no leaves
-        // cout << "deletee has no children" << endl;
+        // cout << root->getValue() << " has no children" << endl;
             if(isRoot == 0){
                 if(rootParent->Right != nullptr){
                     if(rootParent->Right->getValue() == root->getValue()){
@@ -559,10 +572,10 @@ void del(Node* root, int value, AVL* Tree){
     }
     // cout << "Retracing balance after deletion for root value: " << root->getValue() << endl;
     balance = root->getBalance();
-    // cout << balance << endl;
+    // cout << "Balance found was " << balance << endl;
     // cout << root->getValue() << " left is " << root->Left->getValue() << " and the right is " << root->Right->getValue() << endl;
     if(balance > 1){
-        if(root->Left->getBalance() >= 1){
+        if(root->Left->getBalance() >= 0){
             //LL
             // cout << "LL" << endl;
             LL(root, Tree);
@@ -572,7 +585,7 @@ void del(Node* root, int value, AVL* Tree){
             LR(root, Tree);
         }
     }else if(balance < -1){
-        if(root->Right->getBalance() <= -1){
+        if(root->Right->getBalance() <= 0){
             //RR
             // cout << "RR" << endl;
             RR(root, Tree);
