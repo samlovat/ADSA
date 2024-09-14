@@ -454,7 +454,7 @@ void del(Node* root, int value, AVL* Tree){
                 }
             }
             root->setValue(max);
-            preorder(root);
+            // preorder(root);
             del(root->Right, max, Tree);
         }else if(root->Left != nullptr && root->Right == nullptr){
         //deletee node has only left leaf
