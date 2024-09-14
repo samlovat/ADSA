@@ -345,9 +345,9 @@ void LR(Node* Grandparent, AVL* Tree){
         Child->Parent = gpaPar;
     }else{
         if(gpaIsLeft == 1){
-            gpaPar->Left = Parent;
+            gpaPar->Left = Child;
         }else{
-            gpaPar->Right = Parent;
+            gpaPar->Right = Child;
         }
         Grandparent->Left = Child->Right;
         if(Child->Right != nullptr){
@@ -403,9 +403,9 @@ void RL(Node* Grandparent, AVL* Tree){
         Child->Parent = gpaPar;
     }else{
         if(gpaIsLeft == 1){
-            gpaPar->Left = Parent;
+            gpaPar->Left = Child;
         }else{
-            gpaPar->Right = Parent;
+            gpaPar->Right = Child;
         }
         Grandparent->Right = Child->Left;
         if(Child->Left != nullptr){
@@ -455,21 +455,21 @@ void del(Node* root, int value, AVL* Tree){
         }
         if(root->Left != nullptr && root->Right != nullptr){
         //deletee node has left and right leaves
-            int goRight = 1;
-            Node* currNode = root->Right;
+            int goLeft = 1;
+            Node* currNode = root->Left;
             int max = currNode->getValue();
-            while(goRight == 1){
+            while(goLeft == 1){
                 //Search for closest node on right
-                if(currNode->Left != nullptr){
-                    currNode = currNode->Left;
+                if(currNode->Right != nullptr){
+                    currNode = currNode->Right;
                     max = std::max(max, currNode->getValue());
                 }else{
-                    goRight = 0;
+                    goLeft = 0;
                 }
             }
             root->setValue(max);
             // preorder(root);
-            del(root->Right, max, Tree);
+            del(root->Left, max, Tree);
         }else if(root->Left != nullptr && root->Right == nullptr){
         //deletee node has only left leaf
             if(isRoot == 0){
@@ -591,7 +591,7 @@ void insert(Node* root, int value, AVL* Tree){
         }else{
             root->Right = new Node(value, root);
         }
-    }else{
+    }else if(value < root->getValue()){
         if(value < root->getValue()){
             if(root->Left != nullptr){
                 insert(root->Left, value, Tree);
@@ -599,6 +599,9 @@ void insert(Node* root, int value, AVL* Tree){
                 root->Left = new Node(value, root);
             }
         }
+    }else{
+        //Already exists in tree
+        return;
     }
     int balance = root->getBalance();
     // cout << "balance after insert for node: " << root->getValue() << ": " << balance << endl;
