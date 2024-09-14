@@ -660,7 +660,7 @@ int main(){
             }
             // cout << valInt << endl;
             // cout << input[1] - '0' << endl;
-            // del(myTree->Root , valInt, myTree);
+            del(myTree->Root , valInt, myTree);
         }else if(input == "PRE"){
             preorder(myTree->Root);
             nowPrint = 1;
