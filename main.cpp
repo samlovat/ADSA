@@ -3,7 +3,7 @@
 #include <cmath>
 using namespace std;
 
-class Node{
+class Node{                                                                 //Node Class
     private:
         int value;
     public:
@@ -45,7 +45,7 @@ class Node{
         }
 };
 
-void inorder(Node* currNode){
+void inorder(Node* currNode){                                               //Prints AVL tree at currNode in 'inorder'
     if(currNode == nullptr){                                                //Print EMPTY if given node is a nullptr
         cout << "EMPTY" << endl;
         return;
@@ -61,7 +61,7 @@ void inorder(Node* currNode){
     return;
 }
 
-void postorder(Node* currNode){
+void postorder(Node* currNode){                                             //Prints AVL tree at currNode in 'postorder'
     if(currNode == nullptr){                                                //Print EMPTY if given node is a nullptr
         cout << "EMPTY" << endl;
         return;
@@ -77,7 +77,7 @@ void postorder(Node* currNode){
     return;
 }
 
-void preorder(Node* currNode){
+void preorder(Node* currNode){                                              //Prints AVL tree at currNode in 'preorder'
     if(currNode == nullptr){                                                //Print EMPTY if given node is a nullptr
         cout << "EMPTY" << endl;
         return;
@@ -92,57 +92,46 @@ void preorder(Node* currNode){
     return;
 }
 
-class AVL{
+class AVL{                                                                  //AVL Class, tracks the root of node structure
     public:
-        Node* Root;
-        AVL(){ this->Root = nullptr; }
+        Node* Root;                             
+        AVL(){ this->Root = nullptr; }                          //Constructor only instantiates empty tree. Root creation is made with insert()
 };
 
-void LL(Node* Grandparent, AVL* Tree){
-    Node* gpaPar = nullptr;
-    Node* Parent = Grandparent->Left;
-    int gpaIsLeft = 0;
-    int root = 0;
-    if(Grandparent->Parent != nullptr){
+void LL(Node* Grandparent, AVL* Tree){                                      //Left Left Rotation
+    Node* gpaPar = nullptr;                                                 //Track parent of given grandparent
+    Node* Parent = Grandparent->Left;                                       //Track child of granpdarent        
+    int gpaIsLeft = 0;                                                      //Member vars to track if grandparent is a left or right child
+    int root = 0;                                                           //Tracks if granparent is a root node
+    if(Grandparent->Parent != nullptr){                                     
         gpaPar = Grandparent->Parent;
-        //Check if Grandpa is right or left of its parent
-        if(gpaPar->Left != nullptr){
-            if(gpaPar->Left->getValue() == Grandparent->getValue()){
-                gpaIsLeft = 1;
-                
+        if(gpaPar->Left != nullptr){                                        //If grandparent has a parent, gpaPar is assigned
+            if(gpaPar->Left->getValue() == Grandparent->getValue()){        
+                gpaIsLeft = 1;                                              //gpaIsLeft state var is assigned accordingly
             }
         }
     }else{
-        //Reset root node 
-        root = 1;
-        Tree->Root = Parent;
+        root = 1;                                                           //If granparent has no parent, set root to 1 (it's a root node)
+        Tree->Root = Parent;                                                //Reassign AVL Tree's root to Parent 
     }
-    if(root == 1){
-        Grandparent->Left = Parent->Right;
-        if(Parent->Right != nullptr){
-            Parent->Right->Parent = Grandparent;
-        }
-        Grandparent->Parent = Parent;
-        Parent->Right = Grandparent;
-        Parent->Parent = gpaPar;
-    }else{
+    if(root == 0){                                                          //If Granparent is a root
         if(gpaIsLeft == 1){
             gpaPar->Left = Parent;
         }else{
             gpaPar->Right = Parent;
         }
-        Grandparent->Left = Parent->Right;
-        if(Parent->Right != nullptr){
-            Parent->Right->Parent = Grandparent;  
-        }        
-        Grandparent->Parent = Parent;
-        Parent->Right = Grandparent;
-        Parent->Parent = gpaPar;
     }
+    Grandparent->Left = Parent->Right;
+    if(Parent->Right != nullptr){
+        Parent->Right->Parent = Grandparent;  
+    }        
+    Grandparent->Parent = Parent;
+    Parent->Right = Grandparent;
+    Parent->Parent = gpaPar;
     return;
 }
 
-void RR(Node* Grandparent, AVL* Tree){
+void RR(Node* Grandparent, AVL* Tree){                                      //Right Right Rotation
     Node* gpaPar = nullptr;
     Node* Parent = Grandparent->Right;
     int gpaIsLeft = 0;
@@ -187,7 +176,7 @@ void RR(Node* Grandparent, AVL* Tree){
     return;
 }
 
-void LR(Node* Grandparent, AVL* Tree){
+void LR(Node* Grandparent, AVL* Tree){                                      //Left Right Rotation
     Node* gpaPar = nullptr;
     Node* Parent = Grandparent->Left;
     Node* Child = Parent->Right;
@@ -243,7 +232,7 @@ void LR(Node* Grandparent, AVL* Tree){
     return;
 }
 
-void RL(Node* Grandparent, AVL* Tree){
+void RL(Node* Grandparent, AVL* Tree){                                      //Right Left Rotation
     Node* gpaPar = nullptr;
     Node* Parent = Grandparent->Right;
     Node* Child = Parent->Left;
