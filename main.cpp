@@ -46,52 +46,47 @@ class Node{
 };
 
 void inorder(Node* currNode){
-    if(currNode == nullptr){
+    if(currNode == nullptr){                                                //Print EMPTY if given node is a nullptr
         cout << "EMPTY" << endl;
         return;
     }
 
-    if(currNode->Left != nullptr){
+    if(currNode->Left != nullptr){                                          //If left child exists, recursive call on left
         inorder(currNode->Left);
     }
-    cout << currNode->getValue() << " ";
-    if(currNode->Right != nullptr){
+    cout << currNode->getValue() << " ";                                    //Print this node
+    if(currNode->Right != nullptr){                                         //If right child exists, recursive call on right
         inorder(currNode->Right);
     }
     return;
 }
 
 void postorder(Node* currNode){
-    if(currNode == nullptr){
+    if(currNode == nullptr){                                                //Print EMPTY if given node is a nullptr
         cout << "EMPTY" << endl;
         return;
     }
 
-    if(currNode->Left != nullptr){
+    if(currNode->Left != nullptr){                                          //If left child exists, recursive call on left
         postorder(currNode->Left);
     }
-    if(currNode->Right != nullptr){
+    if(currNode->Right != nullptr){                                         //If right child exists, recursive call on right
         postorder(currNode->Right);
     }
-    cout << currNode->getValue() << " ";
+    cout << currNode->getValue() << " ";                                    //Print this node
     return;
 }
 
 void preorder(Node* currNode){
-    if(currNode == nullptr){
+    if(currNode == nullptr){                                                //Print EMPTY if given node is a nullptr
         cout << "EMPTY" << endl;
         return;
     }
-
-    //Print this node
-    cout << currNode->getValue() << " ";
-
-    //if left {print left}
-    if(currNode->Left != nullptr){
+    cout << currNode->getValue() << " ";                                    //Print this node
+    if(currNode->Left != nullptr){                                          //If left child exists, recursive call on left
         preorder(currNode->Left);
     }
-    //if right{print right}
-    if(currNode->Right != nullptr){
+    if(currNode->Right != nullptr){                                         //If right child exists, recursive call on right
         preorder(currNode->Right);
     }
     return;
