@@ -101,11 +101,11 @@ class AVL{                                                                  //AV
 void LL(Node* Grandparent, AVL* Tree){                                      //Left Left Rotation
     Node* gpaPar = nullptr;                                                 //Track parent of given grandparent
     Node* Parent = Grandparent->Left;                                       //Track child of granpdarent        
-    int gpaIsLeft = 0;                                                      //Member vars to track if grandparent is a left or right child
+    int gpaIsLeft = 0;                                                      //Member var to track if grandparent is a left or right child
     int root = 0;                                                           //Tracks if granparent is a root node
     if(Grandparent->Parent != nullptr){                                     
-        gpaPar = Grandparent->Parent;
-        if(gpaPar->Left != nullptr){                                        //If grandparent has a parent, gpaPar is assigned
+        gpaPar = Grandparent->Parent;                                       //If grandparent has a parent, gpaPar is assigned
+        if(gpaPar->Left != nullptr){                                        
             if(gpaPar->Left->getValue() == Grandparent->getValue()){        
                 gpaIsLeft = 1;                                              //gpaIsLeft state var is assigned accordingly
             }
@@ -114,8 +114,8 @@ void LL(Node* Grandparent, AVL* Tree){                                      //Le
         root = 1;                                                           //If granparent has no parent, set root to 1 (it's a root node)
         Tree->Root = Parent;                                                //Reassign AVL Tree's root to Parent 
     }
-    if(root == 0){                                                          //If Granparent is not root
-        if(gpaIsLeft == 1){                                                 //set its parent's correct child pointer to Parent
+    if(root == 0){                                                          //If Granparent is not root set its parent's correct child pointer to Parent
+        if(gpaIsLeft == 1){                                                 
             gpaPar->Left = Parent;
         }else{
             gpaPar->Right = Parent;
@@ -132,33 +132,31 @@ void LL(Node* Grandparent, AVL* Tree){                                      //Le
 }
 
 void RR(Node* Grandparent, AVL* Tree){                                      //Right Right Rotation
-    Node* gpaPar = nullptr;
-    Node* Parent = Grandparent->Right;
-    int gpaIsLeft = 0;
-    int root = 0;
+    Node* gpaPar = nullptr;                                                 //Track parent of given grandparent
+    Node* Parent = Grandparent->Right;                                      //Track child of granpdarent 
+    int gpaIsLeft = 0;                                                      //Member var to track if grandparent is a left or right child
+    int root = 0;                                                           //Tracks if granparent is a root node
     if(Grandparent->Parent != nullptr){
-        gpaPar = Grandparent->Parent;
-        //Check if gpa is right or left of its parent
-        if(gpaPar->Left != nullptr){
+        gpaPar = Grandparent->Parent;                                       //If grandparent has a parent, gpaPar is assigned
+        if(gpaPar->Left != nullptr){                                        
             if(gpaPar->Left->getValue() == Grandparent->getValue()){
-                gpaIsLeft = 1;
+                gpaIsLeft = 1;                                              //gpaIsLeft state var is assigned accordingly
             }
         }
     }else{
-        //Reset root node 
-        root = 1;
-        Tree->Root = Parent;
+        root = 1;                                                           //If granparent has no parent, set root to 1 (it's a root node)
+        Tree->Root = Parent;                                                //Reassign AVL Tree's root to Parent
     }
-    if(root == 0){
+    if(root == 0){                                                          //If Granparent is not root set its parent's correct child pointer to Parent
         if(gpaIsLeft == 1){
             gpaPar->Left = Parent;
         }else{
             gpaPar->Right = Parent;
         }
     }
-    Grandparent->Right = Parent->Left;
+    Grandparent->Right = Parent->Left;                                      //Assign granparent's right child pointer to point at parent's left child
     if(Parent->Left != nullptr){
-        Parent->Left->Parent = Grandparent;
+        Parent->Left->Parent = Grandparent;                                 //If Parent has left node, assign grandparent as its new parent
     }
     Grandparent->Parent = Parent;
     Parent->Left = Grandparent;
@@ -167,114 +165,82 @@ void RR(Node* Grandparent, AVL* Tree){                                      //Ri
 }
 
 void LR(Node* Grandparent, AVL* Tree){                                      //Left Right Rotation
-    Node* gpaPar = nullptr;
-    Node* Parent = Grandparent->Left;
-    Node* Child = Parent->Right;
-    int gpaIsLeft = 0;
-    int root = 0;
+    Node* gpaPar = nullptr;                                                 //Track parent of given grandparent
+    Node* Parent = Grandparent->Left;                                       //Track child of granpdarent 
+    Node* Child = Parent->Right;                                            //Track grandchild of grandparent
+    int gpaIsLeft = 0;                                                      //Member var to track if grandparent is a left or right child
+    int root = 0;                                                           //Tracks if granparent is a root node
     if(Grandparent->Parent != nullptr){
-        gpaPar = Grandparent->Parent;
-        //Check if gpa is right or left of its parent
+        gpaPar = Grandparent->Parent;                                       //If grandparent has a parent, gpaPar is assigned
         if(gpaPar->Left != nullptr){
             if(gpaPar->Left->getValue() == Grandparent->getValue()){
-                gpaIsLeft = 1;
+                gpaIsLeft = 1;                                              //gpaIsLeft state var is assigned accordingly
             }
         }
     }else{
-        //Reset root node 
-        root = 1;
-        Tree->Root = Child;
+        root = 1;                                                           //If granparent has no parent, set root to 1 (it's a root node)
+        Tree->Root = Child;                                                 //Reassign AVL Tree's root to Parent
     }
-    if(root == 1){
-        Grandparent->Left = Child->Right;
-        if(Child->Right != nullptr){
-            Child->Right->Parent = Grandparent;
-        }        
-        Grandparent->Parent = Child;
-        Parent->Parent = Child;
-        Parent->Right = Child->Left;
-        if(Child->Left != nullptr){
-            Child->Left->Parent = Parent;
-        }
-        Child->Right = Grandparent;
-        Child->Left = Parent;
-        Child->Parent = gpaPar;
-    }else{
+    if(root == 0){                                                          //If Granparent is not root set its parent's correct child pointer to Parent
         if(gpaIsLeft == 1){
             gpaPar->Left = Child;
         }else{
             gpaPar->Right = Child;
         }
-        Grandparent->Left = Child->Right;
-        if(Child->Right != nullptr){
-            Child->Right->Parent = Grandparent;
-        }
-        Grandparent->Parent = Child;
-        Parent->Parent = Child;
-        Parent->Right = Child->Left;
-        if(Child->Left != nullptr){
-            Child->Left->Parent = Parent;
-        }
-        Child->Parent = gpaPar;
-        Child->Right = Grandparent;
-        Child->Left = Parent;
+    }        
+    Grandparent->Left = Child->Right;                                       //Assign granparent's left child pointer to point at parent's right child
+    if(Child->Right != nullptr){
+        Child->Right->Parent = Grandparent;                                 //If Child has right node, assign grandparent as its new parent
     }
+    Grandparent->Parent = Child;
+    Parent->Parent = Child;
+    Parent->Right = Child->Left;
+    if(Child->Left != nullptr){
+        Child->Left->Parent = Parent;
+    }
+    Child->Right = Grandparent;
+    Child->Left = Parent;
+    Child->Parent = gpaPar;
     return;
 }
 
 void RL(Node* Grandparent, AVL* Tree){                                      //Right Left Rotation
-    Node* gpaPar = nullptr;
-    Node* Parent = Grandparent->Right;
-    Node* Child = Parent->Left;
-    int gpaIsLeft = 0;
-    int root = 0;
+    Node* gpaPar = nullptr;                                                 //Track parent of given grandparent
+    Node* Parent = Grandparent->Right;                                      //Track child of granparent 
+    Node* Child = Parent->Left;                                             //Track grandchild of grandparent
+    int gpaIsLeft = 0;                                                      //Member var to track if grandparent is a left or right child
+    int root = 0;                                                           //Tracks if granparent is a root node
     if(Grandparent->Parent != nullptr){
-        gpaPar = Grandparent->Parent;
-        //Check if gpa is right or left of its parent
+        gpaPar = Grandparent->Parent;                                       //If grandparent has a parent, gpaPar is assigned
         if(gpaPar->Left != nullptr){
             if(gpaPar->Left->getValue() == Grandparent->getValue()){
-                gpaIsLeft = 1;
+                gpaIsLeft = 1;                                              //gpaIsLeft state var is assigned accordingly
             }
         }
     }else{
-        //Reset root node 
-        root = 1;
-        Tree->Root = Child;
+        root = 1;                                                           //If granparent has no parent, set root to 1 (it's a root node)
+        Tree->Root = Child;                                                 //Reassign AVL Tree's root to Parent
     }
-    if(root == 1){
-        Grandparent->Right = Child->Left;
-        if(Child->Left != nullptr){
-            Child->Left->Parent = Grandparent;
-        }       
-        Grandparent->Parent = Child;
-        Parent->Parent = Child;
-        Parent->Left = Child->Right;
-        if(Child->Right != nullptr){
-            Child->Right->Parent = Parent;
-        }        
-        Child->Left = Grandparent;
-        Child->Right = Parent;
-        Child->Parent = gpaPar;
-    }else{
+    if(root == 0){                                                          //If Granparent is not root set its parent's correct child pointer to Parent                                                 
         if(gpaIsLeft == 1){
             gpaPar->Left = Child;
         }else{
             gpaPar->Right = Child;
         }
-        Grandparent->Right = Child->Left;
-        if(Child->Left != nullptr){
-            Child->Left->Parent = Grandparent;
-        }        
-        Grandparent->Parent = Child;
-        Parent->Parent = Child;
-        Parent->Left = Child->Right;
-        if(Child->Right != nullptr){
-            Child->Right->Parent = Parent;
-        }        
-        Child->Parent = gpaPar;
-        Child->Left = Grandparent;
-        Child->Right = Parent;
     }
+    Grandparent->Right = Child->Left;                                       //Assign granparent's right child pointer to point at parent's left child
+    if(Child->Left != nullptr){
+        Child->Left->Parent = Grandparent;                                  //If Child has left node, assign grandparent as its new parent
+    }        
+    Grandparent->Parent = Child;
+    Parent->Parent = Child;
+    Parent->Left = Child->Right;
+    if(Child->Right != nullptr){
+        Child->Right->Parent = Parent;
+    }        
+    Child->Parent = gpaPar;
+    Child->Left = Grandparent;
+    Child->Right = Parent;
     return;
 }
 
