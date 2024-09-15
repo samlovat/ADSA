@@ -7,12 +7,12 @@ class Node{
     private:
         int value;
     public:
-        Node(int value_){
-            this->value = value_;
-            this->Right = nullptr;
-            this->Left = nullptr;
-            this->Parent = nullptr;
-        }
+        // Node(int value_){
+        //     this->value = value_;
+        //     this->Right = nullptr;
+        //     this->Left = nullptr;
+        //     this->Parent = nullptr;
+        // }
         Node(int value_, Node* Parent_){ 
             this->value = value_; this->Parent = Parent_; this->Left = nullptr; this->Right = nullptr;
         }
