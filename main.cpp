@@ -158,8 +158,8 @@ void RR(Node* Grandparent, AVL* Tree){                                      //Ri
     if(Parent->Left != nullptr){
         Parent->Left->Parent = Grandparent;                                 //If Parent has left node, assign grandparent as its new parent
     }
-    Grandparent->Parent = Parent;
-    Parent->Left = Grandparent;
+    Grandparent->Parent = Parent;                                           //Reassign granparent's parent
+    Parent->Left = Grandparent;                                             //Reassign Parent's children pointers
     Parent->Parent = gpaPar;            
     return;
 }
@@ -188,19 +188,19 @@ void LR(Node* Grandparent, AVL* Tree){                                      //Le
             gpaPar->Right = Child;
         }
     }        
-    Grandparent->Left = Child->Right;                                       //Assign granparent's left child pointer to point at parent's right child
+    Grandparent->Left = Child->Right;                                       //Assign Granparent's left child pointer to point at Child's right child
     if(Child->Right != nullptr){
-        Child->Right->Parent = Grandparent;                                 //If Child has right node, assign grandparent as its new parent
+        Child->Right->Parent = Grandparent;                                 //If Child has right node, assign Grandparent as its new parent
     }
-    Grandparent->Parent = Child;
-    Parent->Parent = Child;
-    Parent->Right = Child->Left;
+    Grandparent->Parent = Child;                                            //Reassign granparent's parent
+    Parent->Parent = Child;                                                 //Reassign Parent's parent
+    Parent->Right = Child->Left;                                            //Reassign Parent's right child pointer
     if(Child->Left != nullptr){
-        Child->Left->Parent = Parent;
+        Child->Left->Parent = Parent;                                       //If Child has left node, assign Parent as its parent
     }
-    Child->Right = Grandparent;
+    Child->Parent = gpaPar;                                                 //Reassign Child's parent pointer
+    Child->Right = Grandparent;                                             //Reassign Child's children pointers
     Child->Left = Parent;
-    Child->Parent = gpaPar;
     return;
 }
 
@@ -228,66 +228,57 @@ void RL(Node* Grandparent, AVL* Tree){                                      //Ri
             gpaPar->Right = Child;
         }
     }
-    Grandparent->Right = Child->Left;                                       //Assign granparent's right child pointer to point at parent's left child
+    Grandparent->Right = Child->Left;                                       //Assign Granparent's right child pointer to point at Child's left child
     if(Child->Left != nullptr){
-        Child->Left->Parent = Grandparent;                                  //If Child has left node, assign grandparent as its new parent
+        Child->Left->Parent = Grandparent;                                  //If Child has left node, assign Grandparent as its new parent
     }        
-    Grandparent->Parent = Child;
-    Parent->Parent = Child;
-    Parent->Left = Child->Right;
+    Grandparent->Parent = Child;                                            //Reassign Granparent's parent
+    Parent->Parent = Child;                                                 //Reassign Parent's parent
+    Parent->Left = Child->Right;                                            //Reassign Parent's left child pointer
     if(Child->Right != nullptr){
-        Child->Right->Parent = Parent;
+        Child->Right->Parent = Parent;                                      //If Child has right node, assign Parent as its parent
     }        
-    Child->Parent = gpaPar;
-    Child->Left = Grandparent;
+    Child->Parent = gpaPar;                                                 //Reassign Child's parent pointer
+    Child->Left = Grandparent;                                              //Reassign Child's children pointers
     Child->Right = Parent;
     return;
 }
 
-void del(Node* root, int value, AVL* Tree){
-    //Search to find node
-    int isRoot = 0;
-    int balance;
-    //Check if tree is empty
+void del(Node* root, int value, AVL* Tree){                                 //Function to delete a node
+    int isRoot = 0;                                                         //State var to track if node given is a root node
+    int balance;                                                            //Var to hold node balance when rebalancing
     if(root == nullptr){
-        return;
+        return;                                                             //Return if tree is empty
     }
-
-    //Compare with currnode
-    if(value < root->getValue() && root->Left != nullptr){
+    if(value < root->getValue() && root->Left != nullptr){                  //Recursively search through tree 
         del(root->Left, value, Tree);
     }else if(value > root->getValue() && root->Right != nullptr){
         del(root->Right, value, Tree);        
     }else if(value != root->getValue()){
-        //Node doesn't exist
-        return;
-    }else{
-        //Time to delete
-        Node* rootParent;
+        return;                                                             //Node doesn't exist, therefore return
+    }else{                                                                  //Node was found, time to delete
+        Node* rootParent;                                                   //Track root's parent (root is the found node to be deleted)
         if(root->Parent != nullptr){
-            rootParent = root->Parent;
+            rootParent = root->Parent;                                      //If root has a parent assign rootParent
         }else{
-            isRoot = 1;
-            rootParent = nullptr;
+            isRoot = 1;                                                     //If no parent, the node to be deleted is a root node
+            rootParent = nullptr;                                           //Assign rootParent and isRoot accordingly
         }
-        if(root->Left != nullptr && root->Right != nullptr){
-        //deletee node has left and right leaves
-            int goLeft = 1;
-            Node* currNode = root->Left;
-            int max = currNode->getValue();
+        if(root->Left != nullptr && root->Right != nullptr){                //Deletee node has left and right leaves
+            int goLeft = 1;                                                 //State variable for following while loop
+            Node* currNode = root->Left;                                    //Var to track the node closest to deletee which is smaller than it
+            int max = currNode->getValue();                                 //Track's the value of currNode
             while(goLeft == 1){
-                //Search for closest node on left
                 if(currNode->Right != nullptr){
-                    currNode = currNode->Right;
-                    max = std::max(max, currNode->getValue());
+                    currNode = currNode->Right;                             //If right child exists, currNode moves down
+                    max = currNode->getValue();              //Reassign max to the 
                 }else{
                     goLeft = 0;
                 }
             }
             root->setValue(max);
             del(root->Left, max, Tree);
-        }else if(root->Left != nullptr && root->Right == nullptr){
-        //deletee node has only left leaf
+        }else if(root->Left != nullptr && root->Right == nullptr){          //Deletee node has only left leaf
             if(isRoot == 0){
                 if(rootParent->Right != nullptr){
                     if(rootParent->Right->getValue() == root->getValue()){
@@ -359,7 +350,7 @@ void del(Node* root, int value, AVL* Tree){
     return;
 }
 
-void insert(Node* root, int value, AVL* Tree){
+void insert(Node* root, int value, AVL* Tree){                              //Function to insert a node
     if(Tree->Root == nullptr){
         Tree->Root = new Node(value, nullptr);
         return;
@@ -397,7 +388,7 @@ void insert(Node* root, int value, AVL* Tree){
     return;
 }
 
-int main(){
+int main(){                                                                 //main
 
     AVL* myTree = new AVL;
     //Reading User Input
