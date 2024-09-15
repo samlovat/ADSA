@@ -278,11 +278,12 @@ void del(Node* root, int value, AVL* Tree){                                 //Fu
             }
             root->setValue(max);                                            //Set deletee's value to value found at max
             del(currNode, max, Tree);                                       //Recursively call delete on currNode
+
         }else if(root->Left != nullptr && root->Right == nullptr){          //Deletee node has only left leaf
-            if(isRoot == 0){
+            if(isRoot == 0){    
                 if(rootParent->Right != nullptr){
                     if(rootParent->Right->getValue() == root->getValue()){
-                        rootParent->Right = root->Left;
+                        rootParent->Right = root->Left;                     //If deletee isn't a root, assign its parent to point at deletee's left child
                     }else{
                         rootParent->Left = root->Left;
                     }
@@ -290,17 +291,17 @@ void del(Node* root, int value, AVL* Tree){                                 //Fu
                     rootParent->Left = root->Left;
                 }
             }else{
-                Tree->Root = root->Left;
+                Tree->Root = root->Left;                                    //If deletee is a root, reassign AVL Tree's root
             }
-            root->Left->Parent = rootParent;
-            delete root;
-            return;
-        }else if(root->Left == nullptr && root->Right != nullptr){
-        //deletee node has only right leaf
+            root->Left->Parent = rootParent;                                //Reassign deletee's child's parent pointer
+            delete root;                                                    //Delete node
+            return;                                                         
+        
+        }else if(root->Left == nullptr && root->Right != nullptr){          //Deletee node has only right leaf
             if(isRoot == 0){
                 if(rootParent->Right != nullptr){
                     if(rootParent->Right->getValue() == root->getValue()){
-                        rootParent->Right = root->Right;
+                        rootParent->Right = root->Right;                    //If deletee isn't a root, assign its parent to point at deletee's right child
                     }else{
                         rootParent->Left = root->Right;          
                     }
@@ -308,18 +309,17 @@ void del(Node* root, int value, AVL* Tree){                                 //Fu
                     rootParent->Left = root->Right;
                 }
             }else{
-                Tree->Root = root->Right;
+                Tree->Root = root->Right;                                   //If deletee is a root, reassign AVL Tree's root
             }
-            root->Right->Parent = rootParent;
-
-            delete root;
+            root->Right->Parent = rootParent;                               //Reassign deletee's child's parent pointer
+            delete root;                                                    //Delete node
             return;
         }else{
-        //deletee has no leaves
-            if(isRoot == 0){
+
+            if(isRoot == 0){                                                //Deletee has no leaves
                 if(rootParent->Right != nullptr){
                     if(rootParent->Right->getValue() == root->getValue()){
-                        rootParent->Right = nullptr;
+                        rootParent->Right = nullptr;                        //If deletee isn't a root, assign its parent to point at nullptr
                     }else{
                         rootParent->Left = nullptr;
                     }
@@ -327,13 +327,13 @@ void del(Node* root, int value, AVL* Tree){                                 //Fu
                     rootParent->Left = nullptr;
                 }
             }else{
-                Tree->Root = nullptr;
+                Tree->Root = nullptr;                                       //If deletee is root, reassign AVL tree's root as nullptr
             }
-            delete root;
+            delete root;                                                    //Delete node
             return;
         }
     }
-    balance = root->getBalance();
+    balance = root->getBalance();                                           //After deletion, each stack frame call will check balance and rotate accordingly
     if(balance > 1){
         if(root->Left->getBalance() >= 0){
             LL(root, Tree);
@@ -352,10 +352,10 @@ void del(Node* root, int value, AVL* Tree){                                 //Fu
 
 void insert(Node* root, int value, AVL* Tree){                              //Function to insert a node
     if(Tree->Root == nullptr){
-        Tree->Root = new Node(value, nullptr);
+        Tree->Root = new Node(value, nullptr);                              //If Tree is empty, create new root node
         return;
     }
-    if(value > root->getValue()){
+    if(value > root->getValue()){                                           //Recursively search tree until gap is found, then insert node
         if(root->Right != nullptr){
             insert(root->Right, value, Tree);
         }else{
@@ -368,10 +368,9 @@ void insert(Node* root, int value, AVL* Tree){                              //Fu
             root->Left = new Node(value, root);
         }
     }else{
-        //Already exists in tree
-        return;
+        return;                                                             //Already exists in tree, return and do nothing
     }
-    int balance = root->getBalance();
+    int balance = root->getBalance();                                       //After insertion, each stack frame call will check balance and rotate accordingly
     if(balance > 1){
         if(root->Left->getBalance() >= 0){
             LL(root, Tree);
@@ -390,32 +389,32 @@ void insert(Node* root, int value, AVL* Tree){                              //Fu
 
 int main(){                                                                 //main
 
-    AVL* myTree = new AVL;
-    //Reading User Input
-    string input;
-    int nowPrint = 0;
-    int valInt;
-    int counter = 0;
+    AVL* myTree = new AVL;                                                  //Create new AVL Tree
+    string input;                                                           //String to hold line of input
+    int nowPrint = 0;                                                       //State variable for while loop
+    int valInt;                                                             //Int to hold numerical value of each instruction
+    string value;                                                           //String to hold numerical value before int conversion
+    int counter = 0;                                                        //Counter to ensure 0 <= instructions <= 100
     while(nowPrint == 0){
-        if(counter == 101){
+        if(counter == 101){                                                 //If too many instructions, break out of while loop
             nowPrint = 1;
             break;
         }
-        cin >> input;
-        valInt = 0;
+        cin >> input;                                                       //Read user input
+        valInt = 0;                                                         //Reset valInt to 0 for each instruction
         if(input[0] == 'A'){
-            string value = input.substr(1);
+            value = input.substr(1);                                        //If instruction starts with 'A', split input to attain value 
             for(size_t i = 0; i < value.length(); i++){
-                valInt = valInt*10 + value[i] - '0';
+                valInt = valInt*10 + value[i] - '0';                        //Convert value to integer for insertion
             }
-            insert(myTree->Root , valInt, myTree);
+            insert(myTree->Root , valInt, myTree);                          //Insert new node
         }else if(input[0] == 'D'){
-            string value = input.substr(1);
+            value = input.substr(1);                                        //If instruction starts with 'D', split input to attain value 
             for(size_t i = 0; i < value.length(); i++){
-                valInt = valInt*10 + value[i] - '0';
+                valInt = valInt*10 + value[i] - '0';                        //Convert value to integer for deletion
             }
-            del(myTree->Root , valInt, myTree);
-        }else if(input == "PRE"){
+            del(myTree->Root , valInt, myTree);                             //Delete node 
+        }else if(input == "PRE"){                                           //If input is "PRE", "POST" or "IN", call print functions and end while loop
             preorder(myTree->Root);
             nowPrint = 1;
         }else if(input == "POST"){
@@ -425,7 +424,7 @@ int main(){                                                                 //ma
             inorder(myTree->Root);
             nowPrint = 1;
         }
-        counter++;
+        counter++;                                                          //Increase counter after an instruction
     }
     return 0;
 }
