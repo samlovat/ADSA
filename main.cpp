@@ -277,7 +277,7 @@ void del(Node* root, int value, AVL* Tree){                                 //Fu
                 }
             }
             root->setValue(max);                                            //Set deletee's value to value found at max
-            del(currNode, max, Tree);                                       //Recursively call delete on currNode
+            del(root->Left, max, Tree);                                       //Recursively call delete on currNode
 
         }else if(root->Left != nullptr && root->Right == nullptr){          //Deletee node has only left leaf
             if(isRoot == 0){    
