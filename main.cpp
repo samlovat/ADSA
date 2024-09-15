@@ -7,47 +7,40 @@ class Node{
     private:
         int value;
     public:
-        // Node(int value_){
-        //     this->value = value_;
-        //     this->Right = nullptr;
-        //     this->Left = nullptr;
-        //     this->Parent = nullptr;
-        // }
-        Node(int value_, Node* Parent_){ 
-            this->value = value_; this->Parent = Parent_; this->Left = nullptr; this->Right = nullptr;
+        Node(int value_, Node* Parent_){                                    //Constructor
+            this->value = value_; this->Parent = Parent_; this->Left = nullptr; this->Right = nullptr; 
         }
-        Node* Parent;
+        Node* Parent;                                                       //Neighbouring Nodes
         Node* Left;
         Node* Right;
-        int getValue(){ return this->value; }
+        int getValue(){ return this->value; }                               //Node Value getter and setter
         void setValue(int value_){ this->value = value_; }
-
-        int getBalance(){
+        
+        int getBalance(){                                                   //Function to return balance factor of a node
             int leftBalance = 0;
             int rightBalance = 0;
-            if(this->Left != nullptr){
+            if(this->Left != nullptr){                                      //If left child exists, check its height with checkChildren()
                 leftBalance = this->Left->checkChildren();
             }
-            if(this->Right != nullptr){
+            if(this->Right != nullptr){                                     //If right child exists, check its height with checkChildren()
                 rightBalance = this->Right->checkChildren();
             }
-            return leftBalance - rightBalance;
+            return leftBalance - rightBalance;                              //Return the left height - right height
         }
         
-        int checkChildren(){
+        int checkChildren(){                                                //Function to return max height of a node's children                       
             int leftHeight = 0;
             int rightHeight = 0;            
-            //Base case
-            if(this->Right == nullptr && this->Left == nullptr){
+            if(this->Right == nullptr && this->Left == nullptr){            //Base case
                 return 1;
             }
-            if(this->Right != nullptr){
+            if(this->Right != nullptr){                                     //If right child exists, recursively call checkChildren()
                 rightHeight = 1 + this->Right->checkChildren();
             }
-            if(this->Left != nullptr){
+            if(this->Left != nullptr){                                      //If left child exists, recursively call checkChildren()
                 leftHeight = 1 + this->Left->checkChildren();
             }
-            int max = std::max(leftHeight, rightHeight);
+            int max = std::max(leftHeight, rightHeight);                    //Return the maximum of left and right heights
             return max;
         }
 };
