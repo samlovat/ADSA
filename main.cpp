@@ -428,7 +428,7 @@ void del(Node* root, int value, AVL* Tree){
 
 void insert(Node* root, int value, AVL* Tree){
     if(Tree->Root == nullptr){
-        Tree->Root = new Node(value);
+        Tree->Root = new Node(value, nullptr);
         return;
     }
     if(value > root->getValue()){
