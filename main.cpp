@@ -265,19 +265,19 @@ void del(Node* root, int value, AVL* Tree){                                 //Fu
             rootParent = nullptr;                                           //Assign rootParent and isRoot accordingly
         }
         if(root->Left != nullptr && root->Right != nullptr){                //Deletee node has left and right leaves
-            int goLeft = 1;                                                 //State variable for following while loop
+            int keepSearching = 1;                                          //State variable for following while loop
             Node* currNode = root->Left;                                    //Var to track the node closest to deletee which is smaller than it
             int max = currNode->getValue();                                 //Track's the value of currNode
-            while(goLeft == 1){
+            while(keepSearching == 1){
                 if(currNode->Right != nullptr){
                     currNode = currNode->Right;                             //If right child exists, currNode moves down
-                    max = currNode->getValue();              //Reassign max to the 
+                    max = currNode->getValue();                             //Reassign max to the next node 
                 }else{
-                    goLeft = 0;
+                    keepSearching = 0;                                      //If no right children, stop searching     
                 }
             }
-            root->setValue(max);
-            del(root->Left, max, Tree);
+            root->setValue(max);                                            //Set deletee's value to value found at max
+            del(currNode, max, Tree);                                       //Recursively call delete on currNode
         }else if(root->Left != nullptr && root->Right == nullptr){          //Deletee node has only left leaf
             if(isRoot == 0){
                 if(rootParent->Right != nullptr){
