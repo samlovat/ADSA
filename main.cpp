@@ -114,19 +114,19 @@ void LL(Node* Grandparent, AVL* Tree){                                      //Le
         root = 1;                                                           //If granparent has no parent, set root to 1 (it's a root node)
         Tree->Root = Parent;                                                //Reassign AVL Tree's root to Parent 
     }
-    if(root == 0){                                                          //If Granparent is a root
-        if(gpaIsLeft == 1){
+    if(root == 0){                                                          //If Granparent is not root
+        if(gpaIsLeft == 1){                                                 //set its parent's correct child pointer to Parent
             gpaPar->Left = Parent;
         }else{
             gpaPar->Right = Parent;
         }
     }
-    Grandparent->Left = Parent->Right;
+    Grandparent->Left = Parent->Right;                                      //Assign granparent's left child pointer to point at parent's right child
     if(Parent->Right != nullptr){
-        Parent->Right->Parent = Grandparent;  
+        Parent->Right->Parent = Grandparent;                                //If Parent has right node, assign grandparent as its new parent
     }        
-    Grandparent->Parent = Parent;
-    Parent->Right = Grandparent;
+    Grandparent->Parent = Parent;                                           //Reassign granparent's parent
+    Parent->Right = Grandparent;                                            //Reassign Parent's children pointers
     Parent->Parent = gpaPar;
     return;
 }
@@ -149,30 +149,20 @@ void RR(Node* Grandparent, AVL* Tree){                                      //Ri
         root = 1;
         Tree->Root = Parent;
     }
-    if(root == 1){
-        Grandparent->Right = Parent->Left;
-        if(Parent->Left != nullptr){
-            Parent->Left->Parent = Grandparent;
-        }
-        Grandparent->Parent = Parent;
-        Parent->Left = Grandparent;
-        Parent->Parent = gpaPar;
-    }else{
+    if(root == 0){
         if(gpaIsLeft == 1){
             gpaPar->Left = Parent;
         }else{
             gpaPar->Right = Parent;
         }
-        Grandparent->Right = Parent->Left;
-        if(Parent->Left != nullptr){
-            Parent->Left->Parent = Grandparent;
-        }
-        
-        Grandparent->Parent = Parent;
-        Parent->Left = Grandparent;
-        Parent->Parent = gpaPar;    
-        
     }
+    Grandparent->Right = Parent->Left;
+    if(Parent->Left != nullptr){
+        Parent->Left->Parent = Grandparent;
+    }
+    Grandparent->Parent = Parent;
+    Parent->Left = Grandparent;
+    Parent->Parent = gpaPar;            
     return;
 }
 
