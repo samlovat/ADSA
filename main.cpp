@@ -112,10 +112,42 @@ class HashTable{
                 currNode = currNode->getNextNode();
             }
         }
+        void print(){
+            Node* currNode = this->head;
+            int lastNode = 0;
+            while(lastNode == 0){
+                cout << currNode->getValue() << " ";
+                currNode = currNode->getNextNode();
+                if(currNode == this->head){
+                    lastNode = 1;
+                }
+            }
+        }
 };
 
 int main(){
-    HashTable myHash;
-    myHash.search("sam");
+    HashTable* myHash;
+    string input;                                                           //String to hold line of input
+    int nowPrint = 0;                                                       //State variable for while loop
+    string value;                                                           //String to hold numerical value before int conversion
+    int counter = 0;                                                        //Counter to ensure 0 <= instructions <= 100
+    while(nowPrint == 0){
+        if(counter == 27){                                                 //If too many instructions, break out of while loop
+            nowPrint = 1;
+            break;
+        }
+        cin >> input;                                                       //Read user input
+        if(input[0] == 'A'){
+            value = input.substr(1);                                        //If instruction starts with 'A', split input to attain value 
+            myHash->insert(value);                          //Insert new node
+        }else if(input[0] == 'D'){
+            value = input.substr(1);                                        //If instruction starts with 'D', split input to attain value 
+            myHash->del(value);                             //Delete node 
+        }else{
+            nowPrint = 1;
+        }                                               
+        counter++;                                                          //Increase counter after an instruction
+    }
+    myHash->print();
     return 0;
 }
