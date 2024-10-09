@@ -2,6 +2,7 @@
 using namespace std;
 #include <string.h>
 
+//Global variable to instantiate 26 nodes
 int tracker = 0;
 
 class Node{
