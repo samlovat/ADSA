@@ -45,18 +45,19 @@ class HashTable{
         }
         Node* getHead(){ return this->head; }
         int compareCurrNode(Node* currNode, string findme){       //Helper function for Node* search()
-            if(currNode->getValue() != findme && currNode->getStatus() == "never used"){
+            if(currNode->getValue() == ""){
                 //If index doesn't contain findme and has never been used, return 0
                 return 0;
             }else if(currNode->getValue() == findme){ 
                 //If index contains 'findme' return 1      
                 return 1;
             }else{
-                //If index doesn't contain findme but it could be further down hash map return 2
+                //If index doesn't contain findme keep searching, return 2
                 return 2;
             }
         }
         Node* search(string findme){
+            cout << "Working on " << findme << endl;
             int index;                          //Use numerical index by casting last char of 'findme' into integer
             Node* currNode = this->head;        //To point to the node currently being looked at
             index = (int)findme[findme.length() - 1];
