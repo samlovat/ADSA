@@ -94,26 +94,26 @@ class HashTable{
                 indexForDelete->kill();
             }
             //Continue through nodes, if node value is <= 'delNode' move to deleted node and repeat
-            Node* currNode = indexForDelete->getNextNode();
-            int valueToBeReplaced;  //Tracks the index of empty node which is searching for a successor
-            valueToBeReplaced = (int)delNode[delNode.length() - 1];
-            int found = 0;          //While loop state variable
-            while(found == 0){
-                int index;
-                string currValue = currNode->getValue();
-                index = (int)currValue[currValue.length() - 1];
-                if(index == 97){
-                    return;             //We have done a cycle of table and repairing is complete
-                }else if(currValue == ""){
-                    return;             //Run into empty node, repairing terminated
-                }
-                if(index <= valueToBeReplaced){
-                    indexForDelete->setValue(currValue);
-                    currNode->kill();
-                    indexForDelete = currNode;
-                }
-                currNode = currNode->getNextNode();
-            }
+            // Node* currNode = indexForDelete->getNextNode();
+            // int valueToBeReplaced;  //Tracks the index of empty node which is searching for a successor
+            // valueToBeReplaced = (int)delNode[delNode.length() - 1];
+            // int found = 0;          //While loop state variable
+            // while(found == 0){
+            //     int index;
+            //     string currValue = currNode->getValue();
+            //     index = (int)currValue[currValue.length() - 1];
+            //     if(index == 97){
+            //         return;             //We have done a cycle of table and repairing is complete
+            //     }else if(currValue == ""){
+            //         return;             //Run into empty node, repairing terminated
+            //     }
+            //     if(index <= valueToBeReplaced){
+            //         indexForDelete->setValue(currValue);
+            //         currNode->kill();
+            //         indexForDelete = currNode;
+            //     }
+            //     currNode = currNode->getNextNode();
+            // }
         }
         void print(){
             Node* currNode = this->head;
