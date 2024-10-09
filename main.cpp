@@ -16,7 +16,6 @@ class Node{
             this->status = "never used"; 
             this->value = "";
             tracker++;
-            cout << "Node number " << tracker << " created!" << endl;
             if(tracker < 26){
                 this->nextNode = new Node;
             }else{
@@ -45,13 +44,16 @@ class HashTable{
             currNode->setNextNode(this->head);
         }
         Node* getHead(){ return this->head; }
-        Node* compareCurrNode(Node* currNode, string findme){       //Helper function for Node* search()
-            //If index contains 'findme' return node 
+        int compareCurrNode(Node* currNode, string findme){       //Helper function for Node* search()
             if(currNode->getValue() != findme && currNode->getStatus() == "never used"){
-                return nullptr;
-            //If index doesn't contain 'findme' return null
-            }else{         
-                return currNode;
+                //If index doesn't contain findme and has never been used, return 0
+                return 0;
+            }else if(currNode->getValue() == findme){ 
+                //If index contains 'findme' return 1      
+                return 1;
+            }else{
+                //If index doesn't contain findme but it could be further down hash map return 2
+                return 2;
             }
         }
         Node* search(string findme){
@@ -64,7 +66,7 @@ class HashTable{
             }
                 int found = 0;                  //Variable to track if 'findme' has been found, also counter so that while loop checks at most 26 Nodes 
                 while(found != 26){
-                    if(this->compareCurrNode(currNode, findme) != nullptr){
+                    if(this->compareCurrNode(currNode, findme) != 2){
                         found = 26;
                         return currNode;
                     }else{
@@ -126,7 +128,7 @@ class HashTable{
 };
 
 int main(){
-    HashTable* myHash;
+    HashTable* myHash = new HashTable;
     string input;                                                           //String to hold line of input
     int nowPrint = 0;                                                       //State variable for while loop
     string value;                                                           //String to hold numerical value before int conversion
