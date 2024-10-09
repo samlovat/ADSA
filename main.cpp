@@ -118,7 +118,9 @@ class HashTable{
             Node* currNode = this->head;
             int lastNode = 0;
             while(lastNode == 0){
-                cout << currNode->getValue() << " ";
+                if(currNode->getValue() != ""){
+                    cout << currNode->getValue() << " ";
+                }
                 currNode = currNode->getNextNode();
                 if(currNode == this->head){
                     lastNode = 1;
