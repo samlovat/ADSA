@@ -12,7 +12,7 @@ class Node{
     public:
         //Constructor recursively makes 26 nodes by default
         Node(){ 
-            //Preset Node value
+            //Preset Node value and status
             this->status = "never used"; 
             this->value = "";
             tracker++;
@@ -22,11 +22,13 @@ class Node{
                 this->nextNode = nullptr;
             }
         }
+        //Traditional getters and setters
         string getValue(){ return this->value; }
         void setValue(string newValue){ this->value = newValue; this->status = "occupied"; }
         string getStatus(){ return this->status; }
         Node* getNextNode(){ return this->nextNode; }
         void setNextNode(Node* newNode){ this->nextNode = newNode; }
+        //kill() command for Node deletion
         void kill(){ this->status = "tombstone"; this->setValue(""); }
 };
 
@@ -93,33 +95,12 @@ class HashTable{
             }else{
                 indexForDelete->kill();
             }
-            //Continue through nodes, if node value is <= 'delNode' move to deleted node and repeat
-            // Node* currNode = indexForDelete->getNextNode();
-            // int valueToBeReplaced;  //Tracks the index of empty node which is searching for a successor
-            // valueToBeReplaced = (int)delNode[delNode.length() - 1];
-            // int found = 0;          //While loop state variable
-            // while(found == 0){
-            //     int index;
-            //     string currValue = currNode->getValue();
-            //     index = (int)currValue[currValue.length() - 1];
-            //     if(index == 97){
-            //         return;             //We have done a cycle of table and repairing is complete
-            //     }else if(currValue == ""){
-            //         return;             //Run into empty node, repairing terminated
-            //     }
-            //     if(index <= valueToBeReplaced){
-            //         indexForDelete->setValue(currValue);
-            //         currNode->kill();
-            //         indexForDelete = currNode;
-            //     }
-            //     currNode = currNode->getNextNode();
-            // }
         }
-        void print(){
+        void print(){                           //Function to print node values
             Node* currNode = this->head;
             int lastNode = 0;
             while(lastNode == 0){
-                if(currNode->getValue() != ""){
+                if(currNode->getValue() != ""){             //Ignore if node is empty
                     cout << currNode->getValue() << " ";
                 }
                 currNode = currNode->getNextNode();
@@ -132,27 +113,27 @@ class HashTable{
 
 int main(){
     HashTable* myHash = new HashTable;
-    string input;                                                           //String to hold line of input
-    int nowPrint = 0;                                                       //State variable for while loop
-    string value;                                                           //String to hold numerical value before int conversion
-    int counter = 0;                                                        //Counter to ensure 0 <= instructions <= 100
+    string input;                                           //String to hold line of input
+    int nowPrint = 0;                                       //State variable for while loop
+    string value;                                           //String to hold numerical value before int conversion
+    int counter = 0;                                        //Counter to ensure 0 <= instructions <= 26
     while(nowPrint == 0){
-        if(counter == 27){                                                 //If too many instructions, break out of while loop
+        if(counter == 27){                                  //If too many instructions, break out of while loop
             nowPrint = 1;
             break;
         }
-        cin >> input;                                                       //Read user input
+        cin >> input;                                       //Read user input
         if(input[0] == 'A'){
-            value = input.substr(1);                                        //If instruction starts with 'A', split input to attain value 
+            value = input.substr(1);                        //If instruction starts with 'A', split input to attain value 
             myHash->insert(value);                          //Insert new node
         }else if(input[0] == 'D'){
-            value = input.substr(1);                                        //If instruction starts with 'D', split input to attain value 
+            value = input.substr(1);                        //If instruction starts with 'D', split input to attain value 
             myHash->del(value);                             //Delete node 
         }else{
             nowPrint = 1;
         }                                               
-        counter++;                                                          //Increase counter after an instruction
+        counter++;                                          //Increase counter after an instruction
     }
-    myHash->print();
+    myHash->print();                                        //Print Hash Table
     return 0;
 }
