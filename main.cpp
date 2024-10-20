@@ -94,10 +94,15 @@ class Map{
                     //minNode->setLinks(minNode->getLinks()) but ^^
                     newLink = minNode->getLinks();
                     // cout << "4" << endl;
-                    for(size_t i = 0; i < parentNode->getBuildCosts().length(); i++){
-                        if(parentNode->getBuildCosts()[i] == 'A'){
+                    // for(size_t i = 0; i < parentNode->getBuildCosts().length(); i++){
+                    //     if(parentNode->getBuildCosts()[i] == 'A'){
+                    //         index = i;
+                    //         break;
+                    //     }
+                    // }
+                    for(size_t i = 0; i < newNodes.size(); i++){
+                        if(parentNode->getBuildCosts() == newNodes[i]->getBuildCosts()){
                             index = i;
-                            break;
                         }
                     }
                     newLink[index] = '1';
