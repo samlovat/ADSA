@@ -54,11 +54,11 @@ class Map{
             int mapIndexer = 0;
             int linkExisted = 0;
             int runningCost = 0;
+            Node* minNode;
+            Node* parentNode = nullptr;
             while(currNode != nullptr){
-                Node* minNode;
-                Node* parentNode;
                 int index;
-                for(int i = 0; i < currNode->getLinks().length(); i++){
+                for(size_t i = 0; i < currNode->getLinks().length(); i++){
                     if(currNode->getLinks()[i] == '1'){
                         if(Nodes[i] != nullptr){
                             theMap.push_back(Nodes[i]);
@@ -76,21 +76,25 @@ class Map{
                         if(costASCII < minBuildCost && costASCII != 0){
                             minBuildCost = costASCII;
                             minNode = Nodes[i];
+                            //cout << "1" << endl;
                             parentNode = currNode;
                             index = i;
                         }
                     }
                 }
-                if(linkExisted == 0 && theMap.size() == mapIndexer + 1){
+                if(linkExisted == 0 && theMap.size() == (size_t)(mapIndexer + 1)){
                     theMap.push_back(minNode);
                     Nodes[index] = nullptr;
                     //parentNode->setLinks(parentNode->getLinks()) but add the link between parentNode and minNode
+                    // cout << "2" << endl;
                     string newLink = parentNode->getLinks();
                     newLink[index] = '1';
+                    // cout << "3" << endl;
                     parentNode->setLinks(newLink);
                     //minNode->setLinks(minNode->getLinks()) but ^^
                     newLink = minNode->getLinks();
-                    for(int i = 0; i < parentNode->getBuildCosts().length(); i++){
+                    // cout << "4" << endl;
+                    for(size_t i = 0; i < parentNode->getBuildCosts().length(); i++){
                         if(parentNode->getBuildCosts()[i] == 'A'){
                             index = i;
                             break;
@@ -102,15 +106,17 @@ class Map{
                     linkExisted = 0;
                     runningCost += minBuildCost;
                     minBuildCost = 53;
-                }else if(linkExisted == 0 && theMap.size() > mapIndexer + 1){
+                }else if(linkExisted == 0 && theMap.size() > (size_t)(mapIndexer + 1)){
                     mapIndexer++;
+                    currNode = theMap[mapIndexer];
+                    continue;
                 }else if(linkExisted == 1){
                     mapIndexer = 0;
                     minBuildCost = 53;
                     linkExisted = 0;
                 }
                 int finished = 1;
-                for(int i = 0; i < Nodes.size(); i++){
+                for(size_t i = 0; i < Nodes.size(); i++){
                     if(Nodes[i] != nullptr){
                         finished = 0;
                     }
@@ -118,6 +124,7 @@ class Map{
                 if(finished == 1){
                     currNode = nullptr;
                 }else{
+                    parentNode = nullptr;
                     currNode = theMap[mapIndexer];
                 }
             }
@@ -138,7 +145,7 @@ class Map{
                 // cout << "MaxDestCost: " << maxDestCost << endl;
                 currNode->setDistance(53);
                 theMap.pop_back();
-                for(int i = 0; i < currNode->getLinks().length(); i++){
+                for(size_t i = 0; i < currNode->getLinks().length(); i++){
                     if(currNode->getLinks()[i] == '1'){
                         char destCost = currNode->getDestroyCosts()[i];
                         int costASCII = (int)destCost;
@@ -216,20 +223,19 @@ class Map{
             // }
         }
         void print(){
-            int nodeindex;
-            for(int i = 0; i < Nodes.size(); i++){
-                if(Nodes[i]->getParent() != nullptr){
-                    for(int j = 0; j < Nodes[i]->getParent()->getBuildCosts().size(); j++){
-                        
-                            if(Nodes[i]->getParent()->getBuildCosts()[j] == 'A'){
-                                nodeindex = j;
-                            }
-                    }
-                }else{
-                    nodeindex = 100;
-                }
-                // cout << nodeindex << " | " << Nodes[i]->getDistance() << endl;
-            }
+            // int nodeindex;
+            // for(size_t i = 0; i < Nodes.size(); i++){
+            //     if(Nodes[i]->getParent() != nullptr){
+            //         for(size_t j = 0; j < Nodes[i]->getParent()->getBuildCosts().size(); j++){
+            //                 if(Nodes[i]->getParent()->getBuildCosts()[j] == 'A'){
+            //                     nodeindex = j;
+            //                 }
+            //         }
+            //     }else{
+            //         nodeindex = 100;
+            //     }
+            //     // cout << nodeindex << " | " << Nodes[i]->getDistance() << endl;
+            // }
             cout << this->runningCost << endl;
         }
 
