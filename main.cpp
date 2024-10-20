@@ -57,7 +57,7 @@ class Map{
             Node* minNode;
             Node* parentNode = nullptr;
             while(currNode != nullptr){
-                int index;
+                int index = -1;
                 for(size_t i = 0; i < currNode->getLinks().length(); i++){
                     if(currNode->getLinks()[i] == '1'){
                         if(Nodes[i] != nullptr){
@@ -84,7 +84,9 @@ class Map{
                 }
                 if(linkExisted == 0 && theMap.size() == (size_t)(mapIndexer + 1)){
                     theMap.push_back(minNode);
-                    Nodes[index] = nullptr;
+                    if(index != -1){
+                        Nodes[index] = nullptr;
+                    }
                     //parentNode->setLinks(parentNode->getLinks()) but add the link between parentNode and minNode
                     // cout << "2" << endl;
                     string newLink = parentNode->getLinks();
