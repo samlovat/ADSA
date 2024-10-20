@@ -73,7 +73,7 @@ class Map{
                         }else{
                             costASCII = costASCII - 71;
                         }
-                        if(costASCII < minBuildCost && costASCII != 0){
+                        if(costASCII < minBuildCost){
                             minBuildCost = costASCII;
                             minNode = Nodes[i];
                             //cout << "1" << endl;
