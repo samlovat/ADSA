@@ -167,24 +167,24 @@ class Map{              //Map class, contains all cities and road relationships
                                     }
                                 }
                                 if(inserted == 0){                          
-                                    priorityQueue.push_back(Nodes[i]);      //If distance wasn't smaller than 
+                                    priorityQueue.push_back(Nodes[i]);      //If distance wasn't smaller than any Nodes, push to back(front of queue) 
                                 }
                             }
                         }else if(costASCII < Nodes[i]->getDistance() && Nodes[i]->getDistance() != 53){
-                            finalDestCost += costASCII;
-                        }
-                    }
+                            finalDestCost += costASCII;     //If cost is smaller than a Node's current distance, 
+                        }                                   //and the Node's distance isn't 53 (the node already has an accepted road)
+                    }                                       //add cost to total dest cost (this road will be removed)
                 }
                 if(priorityQueue.empty()){
-                    currNode = nullptr;
+                    currNode = nullptr;                     //If queue is empty, complete
                 }else{
-                    currNode = priorityQueue[priorityQueue.size()-1];
+                    currNode = priorityQueue[priorityQueue.size()-1];   //Otherwise, move to next item in queue
                 }
             }
-            this->runningCost += finalDestCost - maxDestCost;
+            this->runningCost += finalDestCost - maxDestCost;       //Add difference between all road destruction costs and destruction costs of remaining roads to running cost.
         }
         void print(){
-            cout << this->runningCost << endl;
+            cout << this->runningCost << endl;                  //Print cost 
         }
 
 };
@@ -214,11 +214,11 @@ int main(){
     }
 
     vector<Node*> myNodes;    
-    for(size_t i = 0; i < tokens.size(); i++){
+    for(size_t i = 0; i < tokens.size(); i++){      //Instantiate all nodes
         myNodes.push_back(new Node(tokens[i], build[i], destroy[i]));
     }
-    Map myMap(myNodes);
-    myMap.connectNodes();
+    Map myMap(myNodes);                             //Instantiate Map with all nodes
+    myMap.connectNodes();                           
     myMap.deleteRoads();
     myMap.print();
     return 0;
