@@ -49,95 +49,93 @@ class Map{              //Map class, contains all cities and road relationships
             int minBuildCost = 53;              //Variable to track road with smallest construction cost. Begins at 53 since 'z = 51'
             int mapIndexer = 0;                 //theMap iterator
             int linkExisted = 0;                //Variable to track if an existing road is found
-            Node* minNode;
-            Node* parentNode = nullptr;
-            int index = -1;
+            Node* minNode;                      //Tracks the node which boasted the road with smallest construction cost
+            Node* parentNode = nullptr;         //Tracks parent of new road to access and alter links (its road list)      
+            int index = -1;                     //Tracks index of min Node
             while(currNode != nullptr){
                 for(size_t i = 0; i < currNode->getLinks().length(); i++){
-                    if(currNode->getLinks()[i] == '1'){
-                        if(Nodes[i] != nullptr){
-                            theMap.push_back(Nodes[i]);
+                    if(currNode->getLinks()[i] == '1'){         //If road exists and the destination Node hasn't 
+                        if(Nodes[i] != nullptr){                //been moved to theMap, add to theMap and delete
+                            theMap.push_back(Nodes[i]);         //from Nodes.
                             Nodes[i] = nullptr;
-                            linkExisted = 1;
-                        }
-                    }else if(currNode->getLinks()[i] == '0' && Nodes[i] != nullptr){
-                        char cost = currNode->getBuildCosts()[i];
+                            linkExisted = 1;                    //Set state variable to reflect that an existing 
+                        }                                       //road was found
+                    }else if(currNode->getLinks()[i] == '0' && Nodes[i] != nullptr){    //If road doesn't exist, and if Node hasn't been moved. (this also checks for when trying to check a Node's road to itself)
+                        char cost = currNode->getBuildCosts()[i];   
                         int costASCII = (int)cost;
-                        if(costASCII <= 90){
+                        if(costASCII <= 90){                //Cast construction cost to integer value
                             costASCII = costASCII - 65;
                         }else{
                             costASCII = costASCII - 71;
                         }
-                        if(costASCII < minBuildCost){
-                            minBuildCost = costASCII;
+                        if(costASCII < minBuildCost){       //If new min is found, change all associated 
+                            minBuildCost = costASCII;       //tracker variables
                             minNode = Nodes[i];
                             parentNode = currNode;
                             index = i;
                         }
                     }
                 }
-                if(linkExisted == 0 && theMap.size() == (size_t)(mapIndexer + 1)){
-                    theMap.push_back(minNode);
-                    Nodes[index] = nullptr;                    
-                    //parentNode->setLinks(parentNode->getLinks()) but add the link between parentNode and minNode
-                    string newLink = parentNode->getLinks();
-                    newLink[index] = '1';
+                if(linkExisted == 0 && theMap.size() == (size_t)(mapIndexer + 1)){  //If there were no existing roads and we have iterated through all nodes in theMap
+                    theMap.push_back(minNode);                  //Construct new min road and add to theMap
+                    Nodes[index] = nullptr;                     //Remove from Nodes
+                    string newLink = parentNode->getLinks();    //Change parentNode's links(road) information to
+                    newLink[index] = '1';                       //add new construction
                     parentNode->setLinks(newLink);
-                    //minNode->setLinks(minNode->getLinks()) but ^^
                     newLink = minNode->getLinks();
-                    for(size_t i = 0; i < newNodes.size(); i++){
+                    for(size_t i = 0; i < newNodes.size(); i++){    //Compare parentNode's buildcosts to newNodes to find index of parentNode
                         if(parentNode->getBuildCosts() == newNodes[i]->getBuildCosts()){
                             index = i;
                         }
                     }
                     newLink[index] = '1';
-                    minNode->setLinks(newLink);
-                    mapIndexer = 0;
-                    linkExisted = 0;
-                    this->runningCost += minBuildCost;
-                    minBuildCost = 53;
-                }else if(linkExisted == 0 && theMap.size() > (size_t)(mapIndexer + 1)){
-                    mapIndexer++;
-                    currNode = theMap[mapIndexer];
+                    minNode->setLinks(newLink);     //Using parentNode index, set new links of minNode
+                    mapIndexer = 0;                 //Reset mapIndex iterator 
+                    linkExisted = 0;                //Reset State variables 
+                    minBuildCost = 53;                    
+                    this->runningCost += minBuildCost;      //Add construction to runningcost               
+                }else if(linkExisted == 0 && theMap.size() > (size_t)(mapIndexer + 1)){ 
+                    mapIndexer++;                   //If no existing roads found but there are more theMap Nodes 
+                    currNode = theMap[mapIndexer];  //to iterate, move on to next Node
                     continue;
-                }else if(linkExisted == 1){
+                }else if(linkExisted == 1){         //If existing link was found, reset tracking variables
                     mapIndexer = 0;
                     minBuildCost = 53;
                     linkExisted = 0;
                 }
-                int finished = 1;
+                int finished = 1;                   //State variable to check if all Nodes have been checked 
                 for(size_t i = 0; i < Nodes.size(); i++){
-                    if(Nodes[i] != nullptr){
+                    if(Nodes[i] != nullptr){        //If Nodes isn't empty, finished = 0
                         finished = 0;
                     }
                 }
                 if(finished == 1){
-                    currNode = nullptr;
+                    currNode = nullptr;             //End while loop
                 }else{
-                    parentNode = nullptr;
+                    parentNode = nullptr;           //Reset ParentNode and move to next Node in theMap
                     currNode = theMap[mapIndexer];
                 }
             }
-            this->Nodes = newNodes;
+            this->Nodes = newNodes;                 //Refill Nodes member variable
         }
         void deleteRoads(){             //Iterates through existing roads and only keeps roads with maximum destructionCost
             if(Nodes.size() == 1){
-                this->runningCost = 0;
+                this->runningCost = 0;  //If only 1 node, cost is 0, return
                 return;
             }
-            //Start from start of node list and use Jarnik-Prim Algorithm to keep only adjacent edges with the largest destruction cost
-            //(as opposed to the smallest distance)
+            //Start from start of node list and use Jarnik-Prim Algorithm to keep only adjacent edges with the 
+            //largest destruction cost (as opposed to the smallest distance)
             Node* currNode = Nodes[0];
-            int maxDestCost = 0;
-            int finalDestCost = 0;
-            vector<Node*> theMap;
-            theMap.push_back(currNode);
+            int maxDestCost = 0;        //Tracks the total destruction cost of all remaining roads after algorithm 
+            int finalDestCost = 0;      //Tracks the total destruction cost of all roads before destruction. The difference between these two will equal the cost of all destructions.
+            vector<Node*> priorityQueue;       //
+            priorityQueue.push_back(currNode);
             while(currNode != nullptr){
                 if(currNode->getDistance() != 53){
                     maxDestCost += currNode->getDistance();
                 }
                 currNode->setDistance(53);
-                theMap.pop_back();
+                priorityQueue.pop_back();
                 for(size_t i = 0; i < currNode->getLinks().length(); i++){
                     if(currNode->getLinks()[i] == '1'){
                         char destCost = currNode->getDestroyCosts()[i];
@@ -150,25 +148,25 @@ class Map{              //Map class, contains all cities and road relationships
                         if(costASCII > Nodes[i]->getDistance() || (costASCII == 0 && Nodes[i]->getDistance() == 0)){
                             Nodes[i]->setDistance(costASCII);
                             finalDestCost += Nodes[i]->getDistance();
-                            for(size_t k = 0; k < theMap.size(); k++){
-                                if(Nodes[i]->getBuildCosts() == theMap[k]->getBuildCosts()){
-                                    theMap.erase(theMap.begin() + k);
+                            for(size_t k = 0; k < priorityQueue.size(); k++){
+                                if(Nodes[i]->getBuildCosts() == priorityQueue[k]->getBuildCosts()){
+                                    priorityQueue.erase(priorityQueue.begin() + k);
                                 }
                             }
                             vector<Node*>::iterator j;
-                            if(theMap.empty()){
-                                theMap.push_back(Nodes[i]);
+                            if(priorityQueue.empty()){
+                                priorityQueue.push_back(Nodes[i]);
                             }else{
                                 int inserted = 0;
-                                for(j = theMap.begin(); j != theMap.end(); j++){
+                                for(j = priorityQueue.begin(); j != priorityQueue.end(); j++){
                                     if(Nodes[i]->getDistance() < (*j)->getDistance()){
-                                        theMap.insert(j, Nodes[i]);
+                                        priorityQueue.insert(j, Nodes[i]);
                                         inserted = 1;
                                         break;
                                     }
                                 }
                                 if(inserted == 0){
-                                    theMap.push_back(Nodes[i]);
+                                    priorityQueue.push_back(Nodes[i]);
                                 }
                             }
                         }else if(costASCII < Nodes[i]->getDistance() && Nodes[i]->getDistance() != 53){
@@ -176,10 +174,10 @@ class Map{              //Map class, contains all cities and road relationships
                         }
                     }
                 }
-                if(theMap.empty()){
+                if(priorityQueue.empty()){
                     currNode = nullptr;
                 }else{
-                    currNode = theMap[theMap.size()-1];
+                    currNode = priorityQueue[priorityQueue.size()-1];
                 }
             }
             this->runningCost += finalDestCost - maxDestCost;
