@@ -33,24 +33,22 @@ class Map{              //Map class, contains all cities and road relationships
         vector<Node*> Nodes;    //Vector of all Nodes to refer to
         int runningCost;        //Running total of cost required in road optimisation
     public:
-        Map(vector<Node*> newNodes){
+        Map(vector<Node*> newNodes){    //Default Constructor
             this->Nodes = newNodes;
         }
-        void connectNodes(){
-            if(Nodes.size() == 1){
+        void connectNodes(){            //Iterates through Nodes and constructs the minimum cost roads so that there is a path to and from each Node
+            if(Nodes.size() == 1){      //If only 1 node, cost is 0, return
                 this->runningCost = 0;
                 return;
             }
-            vector<Node*> newNodes = Nodes;
-            //Collect Strongly Connected Groups
-            Node* currNode = Nodes[0];
-            vector<Node*> theMap;
-            theMap.push_back(currNode);
-            Nodes[0] = nullptr;
-            int minBuildCost = 53;
-            int mapIndexer = 0;
-            int linkExisted = 0;
-            int runningCost = 0;
+            vector<Node*> newNodes = Nodes;     //Copy of Nodes to refer to later
+            Node* currNode = Nodes[0];          //Node pointer to iterate 
+            vector<Node*> theMap;               //Vector to move nodes once they are dealt with
+            theMap.push_back(currNode);         
+            Nodes[0] = nullptr;                 //Delete currNode from Nodes vector (This is why newNodes exists)
+            int minBuildCost = 53;              //Variable to track road with smallest construction cost. Begins at 53 since 'z = 51'
+            int mapIndexer = 0;                 //theMap iterator
+            int linkExisted = 0;                //Variable to track if an existing road is found
             Node* minNode;
             Node* parentNode = nullptr;
             int index = -1;
@@ -96,7 +94,7 @@ class Map{              //Map class, contains all cities and road relationships
                     minNode->setLinks(newLink);
                     mapIndexer = 0;
                     linkExisted = 0;
-                    runningCost += minBuildCost;
+                    this->runningCost += minBuildCost;
                     minBuildCost = 53;
                 }else if(linkExisted == 0 && theMap.size() > (size_t)(mapIndexer + 1)){
                     mapIndexer++;
@@ -120,10 +118,9 @@ class Map{              //Map class, contains all cities and road relationships
                     currNode = theMap[mapIndexer];
                 }
             }
-            this->runningCost = runningCost;
             this->Nodes = newNodes;
         }
-        void deleteRoads(){
+        void deleteRoads(){             //Iterates through existing roads and only keeps roads with maximum destructionCost
             if(Nodes.size() == 1){
                 this->runningCost = 0;
                 return;
