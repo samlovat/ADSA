@@ -6,7 +6,7 @@ using namespace std;
 
 class Node{
     private:
-        Node* parent;
+        // Node* parent;
         int distance;
         string links;
         string buildCost;
@@ -16,12 +16,12 @@ class Node{
             this->links = _links;
             this->buildCost = _buildCost;
             this->destroyCost = _destroyCost;
-            this->parent = nullptr;
+            // this->parent = nullptr;
             this->distance = 0;    //In the eventual Jarnik-Prim Alogrithm, edges are kept if they have the largest destruction cost, this therefore starts at 0
         }
         //Getters and Setters
-        Node* getParent(){return this->parent;}
-        void setParent(Node* newParent){this->parent = newParent;}
+        // Node* getParent(){return this->parent;}
+        // void setParent(Node* newParent){this->parent = newParent;}
         int getDistance(){return this->distance;}
         void setDistance(int newDistance){this->distance = newDistance;}
         string getLinks(){return this->links;}
@@ -76,7 +76,6 @@ class Map{
                         if(costASCII < minBuildCost){
                             minBuildCost = costASCII;
                             minNode = Nodes[i];
-                            //cout << "1" << endl;
                             parentNode = currNode;
                             index = i;
                         }
@@ -86,20 +85,11 @@ class Map{
                     theMap.push_back(minNode);
                     Nodes[index] = nullptr;                    
                     //parentNode->setLinks(parentNode->getLinks()) but add the link between parentNode and minNode
-                    // cout << "2" << endl;
                     string newLink = parentNode->getLinks();
                     newLink[index] = '1';
-                    // cout << "3" << endl;
                     parentNode->setLinks(newLink);
                     //minNode->setLinks(minNode->getLinks()) but ^^
                     newLink = minNode->getLinks();
-                    // cout << "4" << endl;
-                    // for(size_t i = 0; i < parentNode->getBuildCosts().length(); i++){
-                    //     if(parentNode->getBuildCosts()[i] == 'A'){
-                    //         index = i;
-                    //         break;
-                    //     }
-                    // }
                     for(size_t i = 0; i < newNodes.size(); i++){
                         if(parentNode->getBuildCosts() == newNodes[i]->getBuildCosts()){
                             index = i;
@@ -140,15 +130,12 @@ class Map{
             currNode = Nodes[0];
             int maxDestCost = 0;
             int finalDestCost = 0;
-            // cout << "Original maxDestCost: " << maxDestCost << endl;
             theMap.clear();
             theMap.push_back(currNode);
             while(currNode != nullptr){
                 if(currNode->getDistance() != 53){
                     maxDestCost += currNode->getDistance();
                 }
-                // cout << "Add to maxDestCost: " << currNode->getDistance() << endl;
-                // cout << "MaxDestCost: " << maxDestCost << endl;
                 currNode->setDistance(53);
                 theMap.pop_back();
                 for(size_t i = 0; i < currNode->getLinks().length(); i++){
@@ -161,27 +148,20 @@ class Map{
                             costASCII = costASCII - 71;
                         }
                         if(costASCII > Nodes[i]->getDistance() || (costASCII == 0 && Nodes[i]->getDistance() == 0)){
-                            // cout << "Setting Parent" << endl;
                             Nodes[i]->setDistance(costASCII);
-                            Nodes[i]->setParent(currNode);
-                            // cout << "Setting distance of node to " << Nodes[i]->getDistance() << endl;
-                            // cout << "Final dest cost from " << finalDestCost << " to ";
+                            // Nodes[i]->setParent(currNode);
                             finalDestCost += Nodes[i]->getDistance();
-                            // cout << finalDestCost << endl;
                             for(size_t k = 0; k < theMap.size(); k++){
                                 if(Nodes[i]->getBuildCosts() == theMap[k]->getBuildCosts()){
-                                    // cout << Nodes[i]->getLinks() << " was already in the map!" << endl;
                                     theMap.erase(theMap.begin() + k);
                                 }
                             }
                             vector<Node*>::iterator j;
                             if(theMap.empty()){
                                 theMap.push_back(Nodes[i]);
-                                // cout << "Pushed back first node" << endl;
                             }else{
                                 int inserted = 0;
                                 for(j = theMap.begin(); j != theMap.end(); j++){
-                                    // cout << "begun iteration for theMap of size: " << theMap.size() << endl;
                                     if(Nodes[i]->getDistance() < (*j)->getDistance()){
                                         theMap.insert(j, Nodes[i]);
                                         inserted = 1;
@@ -193,65 +173,19 @@ class Map{
                                 }
                             }
                         }else if(costASCII < Nodes[i]->getDistance() && Nodes[i]->getDistance() != 53){
-                            // cout << "Final dest cost from " << finalDestCost << " to ";
                             finalDestCost += costASCII;
-                            // cout << finalDestCost << endl;
                         }
                     }
                 }
                 if(theMap.empty()){
                     currNode = nullptr;
                 }else{
-                    // cout << "cont" << endl;
                     currNode = theMap[theMap.size()-1];
                 }
             }
-            // cout << "Final MaxDestCost: " << maxDestCost << " and runningCost pre maxDestCost " << runningCost << " and finalCostDest " << finalDestCost << endl;
             this->runningCost += finalDestCost - maxDestCost;
-            // currNode = Nodes[Nodes.size() - 1];
-            // int treePath = 0;
-            // int counter = 0;
-            // while(counter != Nodes.size()){
-            //     for(int i = 0; i < Nodes.size(); i++){
-            //         for(int j = 0; j < Nodes[i]->getParent()->getBuildCosts().length(); j++){
-            //             if(currNode->getParent()->getBuildCosts()[j] == 'A'){
-            //                 // treePath = j;
-
-            //                 break;
-            //             }
-            //         }
-            //         if(currNode->getLinks()[i] == '1'){
-            //             if(i != treePath){
-            //                 runningCost += currNode->getDestroyCosts()[i];
-            //                 string newLinks = currNode->getLinks();
-            //                 newLinks[i] = '0';
-            //                 currNode->setLinks(newLinks);
-            //                 newLinks = Nodes[i]->getLinks();
-            //                 newLinks[Nodes.size() - 1 - counter] = '0';
-            //                 Nodes[i]->setLinks(newLinks);
-            //             }
-            //         }
-            //     }
-            //     counter++;
-            //     if(counter != Nodes.size()){
-            //         currNode = Nodes[Nodes.size() - 1 - counter];
-            //     }
-            // }
         }
         void print(){
-            // int nodeindex;
-            // for(size_t i = 0; i < Nodes.size(); i++){
-            //     if(Nodes[i]->getParent() != nullptr){
-            //         for(size_t j = 0; j < Nodes[i]->getParent()->getBuildCosts().size(); j++){
-            //                 if(Nodes[i]->getParent()->getBuildCosts()[j] == 'A'){
-            //                     nodeindex = j;
-            //                 }
-            //         }
-            //     }else{
-            //         nodeindex = 100;
-            //     }
-            //     // cout << nodeindex << " | " << Nodes[i]->getDistance() << endl;
-            // }
             cout << this->runningCost << endl;
         }
 
