@@ -4,24 +4,20 @@ using namespace std;
 #include <vector>
 #include <sstream>
 
-class Node{
+class Node{                 //Node class, represents one Node/City and its associated roads and costs
     private:
-        // Node* parent;
-        int distance;
-        string links;
-        string buildCost;
-        string destroyCost;
+        int distance;               //For Jarnik-Prim Algorithm
+        string links;               //Contains roads between Nodes
+        string buildCost;           //Cost to build roads
+        string destroyCost;         //Cost to destroy roads
     public:
-        Node(string _links, string _buildCost, string _destroyCost){
-            this->links = _links;
+        Node(string _links, string _buildCost, string _destroyCost){    //Default Constructor
+            this->links = _links;                                   
             this->buildCost = _buildCost;
             this->destroyCost = _destroyCost;
-            // this->parent = nullptr;
             this->distance = 0;    //In the eventual Jarnik-Prim Alogrithm, edges are kept if they have the largest destruction cost, this therefore starts at 0
         }
         //Getters and Setters
-        // Node* getParent(){return this->parent;}
-        // void setParent(Node* newParent){this->parent = newParent;}
         int getDistance(){return this->distance;}
         void setDistance(int newDistance){this->distance = newDistance;}
         string getLinks(){return this->links;}
@@ -32,19 +28,20 @@ class Node{
         void setDestroyCosts(string newDestroyCosts){this->destroyCost = newDestroyCosts;}
 };
 
-class Map{
+class Map{              //Map class, contains all cities and road relationships
     private:
-        vector<Node*> Nodes;
-        vector<vector<Node*>> connectedGroups;
-        int runningCost;
+        vector<Node*> Nodes;    //Vector of all Nodes to refer to
+        int runningCost;        //Running total of cost required in road optimisation
     public:
         Map(vector<Node*> newNodes){
             this->Nodes = newNodes;
+        }
+        void connectNodes(){
             if(Nodes.size() == 1){
                 this->runningCost = 0;
                 return;
             }
-            
+            vector<Node*> newNodes = Nodes;
             //Collect Strongly Connected Groups
             Node* currNode = Nodes[0];
             vector<Node*> theMap;
@@ -125,12 +122,14 @@ class Map{
             }
             this->runningCost = runningCost;
             this->Nodes = newNodes;
+        }
+        void deleteRoads(){
             //Start from start of node list and use Jarnik-Prim Algorithm to keep only adjacent edges with the largest destruction cost
             //(as opposed to the smallest distance)
-            currNode = Nodes[0];
+            Node* currNode = Nodes[0];
             int maxDestCost = 0;
             int finalDestCost = 0;
-            theMap.clear();
+            vector<Node*> theMap;
             theMap.push_back(currNode);
             while(currNode != nullptr){
                 if(currNode->getDistance() != 53){
@@ -149,7 +148,6 @@ class Map{
                         }
                         if(costASCII > Nodes[i]->getDistance() || (costASCII == 0 && Nodes[i]->getDistance() == 0)){
                             Nodes[i]->setDistance(costASCII);
-                            // Nodes[i]->setParent(currNode);
                             finalDestCost += Nodes[i]->getDistance();
                             for(size_t k = 0; k < theMap.size(); k++){
                                 if(Nodes[i]->getBuildCosts() == theMap[k]->getBuildCosts()){
@@ -220,19 +218,8 @@ int main(){
         myNodes.push_back(new Node(tokens[i], build[i], destroy[i]));
     }
     Map myMap(myNodes);
+    myMap.connectNodes();
+    myMap.deleteRoads();
     myMap.print();
-    // vector<string>::iterator itr;
-    // for(auto itr = tokens.begin(); itr != tokens.end(); itr++){
-    //     cout << *itr << endl;
-    // }
-    // for(auto itr = build.begin(); itr != build.end(); itr++){
-    //     cout << *itr << endl;
-    // }
-    // for(auto itr = destroy.begin(); itr != destroy.end(); itr++){
-    //     cout << *itr << endl;
-    // }
-
-    //Collect Strongly Linked Components
-
     return 0;
 }
