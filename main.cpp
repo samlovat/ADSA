@@ -186,7 +186,6 @@ class Map{              //Map class, contains all cities and road relationships
         void print(){
             cout << this->runningCost << endl;                  //Print cost 
         }
-
 };
 
 int main(){
