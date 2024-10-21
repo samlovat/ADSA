@@ -35,6 +35,7 @@ class Map{              //Map class, contains all cities and road relationships
     public:
         Map(vector<Node*> newNodes){    //Default Constructor
             this->Nodes = newNodes;
+            this->runningCost = 0;
         }
         void connectNodes(){            //Iterates through Nodes and constructs the minimum cost roads so that there is a path to and from each Node
             if(Nodes.size() == 1){      //If only 1 node, cost is 0, return
@@ -128,45 +129,45 @@ class Map{              //Map class, contains all cities and road relationships
             Node* currNode = Nodes[0];
             int maxDestCost = 0;        //Tracks the total destruction cost of all remaining roads after algorithm 
             int finalDestCost = 0;      //Tracks the total destruction cost of all roads before destruction. The difference between these two will equal the cost of all destructions.
-            vector<Node*> priorityQueue;       //
+            vector<Node*> priorityQueue;       //Priority queue to track Nodes for algorithm
             priorityQueue.push_back(currNode);
             while(currNode != nullptr){
                 if(currNode->getDistance() != 53){
-                    maxDestCost += currNode->getDistance();
+                    maxDestCost += currNode->getDistance();     //Add accepted road's destruction cost to maxDestCost
                 }
-                currNode->setDistance(53);
-                priorityQueue.pop_back();
+                priorityQueue.pop_back();               //remove from queue 
+                currNode->setDistance(53);              //Set node's distance to 53 (this can never be changed afterwards)
                 for(size_t i = 0; i < currNode->getLinks().length(); i++){
-                    if(currNode->getLinks()[i] == '1'){
+                    if(currNode->getLinks()[i] == '1'){     //If road exists
                         char destCost = currNode->getDestroyCosts()[i];
                         int costASCII = (int)destCost;
-                        if(costASCII <= 90){
+                        if(costASCII <= 90){            //Cast destruction cost to correct integer 
                             costASCII = costASCII - 65;
                         }else{
                             costASCII = costASCII - 71;
                         }
-                        if(costASCII > Nodes[i]->getDistance() || (costASCII == 0 && Nodes[i]->getDistance() == 0)){
-                            Nodes[i]->setDistance(costASCII);
-                            finalDestCost += Nodes[i]->getDistance();
+                        if(costASCII > Nodes[i]->getDistance() || (costASCII == 0 && Nodes[i]->getDistance() == 0)){    //If cost is greater than the Node's current distance, or if both are equal to 0 
+                            Nodes[i]->setDistance(costASCII);           //Set new distance 
+                            finalDestCost += Nodes[i]->getDistance();   //Add to total dest cost
                             for(size_t k = 0; k < priorityQueue.size(); k++){
                                 if(Nodes[i]->getBuildCosts() == priorityQueue[k]->getBuildCosts()){
-                                    priorityQueue.erase(priorityQueue.begin() + k);
+                                    priorityQueue.erase(priorityQueue.begin() + k);         //If Node whose distance was changed exists in the priority queue already, delete it to avoid duplication upon insertion
                                 }
                             }
                             vector<Node*>::iterator j;
                             if(priorityQueue.empty()){
-                                priorityQueue.push_back(Nodes[i]);
+                                priorityQueue.push_back(Nodes[i]);      //If queue is empty, push_back
                             }else{
                                 int inserted = 0;
                                 for(j = priorityQueue.begin(); j != priorityQueue.end(); j++){
                                     if(Nodes[i]->getDistance() < (*j)->getDistance()){
-                                        priorityQueue.insert(j, Nodes[i]);
+                                        priorityQueue.insert(j, Nodes[i]);          //Iterates through queue to ensure node is inserted based on its distance
                                         inserted = 1;
                                         break;
                                     }
                                 }
-                                if(inserted == 0){
-                                    priorityQueue.push_back(Nodes[i]);
+                                if(inserted == 0){                          
+                                    priorityQueue.push_back(Nodes[i]);      //If distance wasn't smaller than 
                                 }
                             }
                         }else if(costASCII < Nodes[i]->getDistance() && Nodes[i]->getDistance() != 53){
