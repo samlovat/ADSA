@@ -92,9 +92,9 @@ class Map{              //Map class, contains all cities and road relationships
                     newLink[index] = '1';
                     minNode->setLinks(newLink);     //Using parentNode index, set new links of minNode
                     mapIndexer = 0;                 //Reset mapIndex iterator 
-                    linkExisted = 0;                //Reset State variables 
-                    minBuildCost = 53;                    
+                    linkExisted = 0;                //Reset State variables                   
                     this->runningCost += minBuildCost;      //Add construction to runningcost               
+                    minBuildCost = 53;  
                 }else if(linkExisted == 0 && theMap.size() > (size_t)(mapIndexer + 1)){ 
                     mapIndexer++;                   //If no existing roads found but there are more theMap Nodes 
                     currNode = theMap[mapIndexer];  //to iterate, move on to next Node
