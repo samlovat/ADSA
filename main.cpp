@@ -124,6 +124,10 @@ class Map{              //Map class, contains all cities and road relationships
             this->Nodes = newNodes;
         }
         void deleteRoads(){
+            if(Nodes.size() == 1){
+                this->runningCost = 0;
+                return;
+            }
             //Start from start of node list and use Jarnik-Prim Algorithm to keep only adjacent edges with the largest destruction cost
             //(as opposed to the smallest distance)
             Node* currNode = Nodes[0];
