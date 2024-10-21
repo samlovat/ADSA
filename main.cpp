@@ -147,6 +147,7 @@ class Map{
                 if(currNode->getDistance() != 53){
                     maxDestCost += currNode->getDistance();
                 }
+                // cout << "Add to maxDestCost: " << currNode->getDistance() << endl;
                 // cout << "MaxDestCost: " << maxDestCost << endl;
                 currNode->setDistance(53);
                 theMap.pop_back();
@@ -159,12 +160,20 @@ class Map{
                         }else{
                             costASCII = costASCII - 71;
                         }
-                        if(costASCII > Nodes[i]->getDistance()){
+                        if(costASCII > Nodes[i]->getDistance() || (costASCII == 0 && Nodes[i]->getDistance() == 0)){
                             // cout << "Setting Parent" << endl;
                             Nodes[i]->setDistance(costASCII);
-                            // cout << "Setting distance of node to " << Nodes[i]->getDistance() << endl;
-                            finalDestCost += Nodes[i]->getDistance();
                             Nodes[i]->setParent(currNode);
+                            // cout << "Setting distance of node to " << Nodes[i]->getDistance() << endl;
+                            // cout << "Final dest cost from " << finalDestCost << " to ";
+                            finalDestCost += Nodes[i]->getDistance();
+                            // cout << finalDestCost << endl;
+                            for(size_t k = 0; k < theMap.size(); k++){
+                                if(Nodes[i]->getBuildCosts() == theMap[k]->getBuildCosts()){
+                                    // cout << Nodes[i]->getLinks() << " was already in the map!" << endl;
+                                    theMap.erase(theMap.begin() + k);
+                                }
+                            }
                             vector<Node*>::iterator j;
                             if(theMap.empty()){
                                 theMap.push_back(Nodes[i]);
@@ -184,7 +193,9 @@ class Map{
                                 }
                             }
                         }else if(costASCII < Nodes[i]->getDistance() && Nodes[i]->getDistance() != 53){
+                            // cout << "Final dest cost from " << finalDestCost << " to ";
                             finalDestCost += costASCII;
+                            // cout << finalDestCost << endl;
                         }
                     }
                 }
