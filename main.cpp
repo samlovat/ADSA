@@ -54,7 +54,7 @@ class HashTable{
             }else if(currNode->getValue() == findme){ 
                 //If index contains 'findme' return 1      
                 return 1;
-            }else{
+            }else if((currNode->getValue() != findme && currNode->getStatus() == "occupied") || currNode->getStatus() == "tombstone"){
                 //If index contains another word return 2
                 return 2;
             }
